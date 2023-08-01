@@ -1,3 +1,11 @@
+"""
+Script for PI, PP recalculation for trios. It should be used if the table with new population is already generated.
+This script uses PI and PP formulas taken from the site of the Center of Molecular Genetics:
+http://www.dnalab.ru/kinship-testing/evaluation-of-evidence
+User needs the file with main table ("ASTR_main.xlsx"), and the file with trios data.
+"""
+
+
 import pandas as pd
 import time
 

@@ -1,3 +1,11 @@
+"""
+Script for likelihood ratio (LR) calculation. The last column, "step", indicate the existence of single-step mutation
+or multi-step mutations ("1" for single-step and "0" for two-step and multi-step mutations). User needs the file with
+main table ("ASTR_main.xlsx"), and 2 files with trios data and false positive fathers data.
+Also, there is a need to set the mutation rate.
+"""
+
+
 import pandas as pd
 import time
 

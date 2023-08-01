@@ -1,3 +1,9 @@
+"""
+Main script for population generation based on STR-analysis data. User needs the file with main table
+("ASTR_main.xlsx"). It calculates PI and PP for real father and for potential fathers (false positive fathers).
+"""
+
+
 import copy
 import random
 import pandas as pd
@@ -108,11 +114,11 @@ def trio_freq_father_allele(m1, m2, k1, k2):
 
 def duo_freq_father_allele(k1, k2):
     other_all = None
-    if k1 == k2:    # Child is homozygote
+    if k1 == k2:    # Child is homozygous
         f_all = k1
         kn = True
         return f_all, other_all, kn
-    elif k1 != k2:    # Child is heterozygote
+    elif k1 != k2:    # Child is heterozygous
         f_all = k1
         other_all = k2
         kn = False

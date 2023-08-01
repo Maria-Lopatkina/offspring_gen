@@ -1,3 +1,9 @@
+"""
+Script for likelihood ratio (LR) calculation for real parents. User needs the file with main table ("ASTR_main.xlsx"),
+and 2 file with trios data. Also, there is a need to set the mutation rate.
+"""
+
+
 import pandas as pd
 import time
 
