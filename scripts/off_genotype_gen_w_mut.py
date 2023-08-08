@@ -5,7 +5,7 @@ import time
 
 
 def empty_freq_table():  # Create empty dictionaries for allele frequencies
-    freq_df = pd.read_excel("/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR22_main.xlsx")
+    freq_df = pd.read_excel("~/projects/PyCharm/GIL/offspring_gen/ASTR22_main.xlsx")
     f_columns = freq_df.columns.values.tolist()
     key_dict = []
     for el in range(1, len(f_columns) - 2, 2):
@@ -15,7 +15,7 @@ def empty_freq_table():  # Create empty dictionaries for allele frequencies
 
 
 def calculate_frequencies(p, d):  # Calculate alleles frequencies for three populations
-    freq_df = pd.read_excel("/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR22_main.xlsx")
+    freq_df = pd.read_excel("~/projects/PyCharm/GIL/offspring_gen/ASTR22_main.xlsx")
     f_columns = freq_df.columns.values.tolist()
     temp_freq_df = freq_df.loc[(freq_df['population'] == p)]
     for al in range(1, len(f_columns) - 2, 2):
@@ -43,7 +43,7 @@ def inx_mutation(n_p, k, m_r):
     list_of_mut = []
     mutation = int(n_p * m_r * k * 22)
     for m in range(mutation):
-        a = random.choice(range(0, n_p * k))
+        a = random.choice(range(n_p * k))
         if a not in list_of_mut:
             list_of_mut.append(a)
             count += 1
@@ -247,7 +247,7 @@ def main():
                "PentaE", "PentaD"]
 
     # Create dataframe with offsprings
-    parents_df = pd.read_excel("/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR22_main.xlsx")
+    parents_df = pd.read_excel("~/projects/PyCharm/GIL/offspring_gen/ASTR22_main.xlsx")
     columns_list = parents_df.columns.values.tolist()
     columns_list = columns_list[:-1]
     columns_list.append("Child_ID")
@@ -314,12 +314,13 @@ def main():
                     allele = columns_list[elem].split('_')[0]
                     f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                     f_allele_random = random.choice(f_alleles)
-                    if elem == random_str:
+                    if allele == random_str:
                         a = random.choice([-1, 1])
                         if a == -1:
-                            f_allele_random += 1
-                        else:
                             f_allele_random -= 1
+                        else:
+                            f_allele_random += 1
+                            print(allele, child_counter)
                     m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
                     m_allele_random = random.choice(m_alleles)
                     possible_alleles = [f_allele_random, m_allele_random]
