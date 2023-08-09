@@ -14,7 +14,7 @@ def empty_freq_table():  # Create empty dictionaries for allele frequencies
     return freq_dict
 
 
-def calculate_frequencies(p, d):  # Calculate alleles frequencies for three populations
+def calculate_frequencies(p, d):  # Calculate alleles frequencies
     freq_df = pd.read_excel("~/projects/PyCharm/GIL/offspring_gen/ASTR22_main.xlsx")
     f_columns = freq_df.columns.values.tolist()
     temp_freq_df = freq_df.loc[(freq_df['population'] == p)]
@@ -35,6 +35,9 @@ def calculate_frequencies(p, d):  # Calculate alleles frequencies for three popu
         for h in range(0, len(new_keys_list)):
             new_aa[new_keys_list[h]] = aa[keys_list[h]]
         d[allele_name] = new_aa
+    k, v = "pmin", 0.0003
+    for ii in d.keys():
+        d[ii][k] = v
     return d
 
 
@@ -47,7 +50,7 @@ def inx_mutation(n_p, k, m_r):
         if a not in list_of_mut:
             list_of_mut.append(a)
             count += 1
-    return list_of_mut, mutation
+    return list_of_mut
 
 
 def father_trio(f1, f2, m1, m2, k1, k2):
@@ -131,39 +134,27 @@ def duo_freq_father_allele(k1, k2):
         return f_all, other_all, kn
 
 
-def calculate_q(str_list, allele_name, ref_dict, f_a, o_a, know):
-    if allele_name in str_list:
-        if know:
-            q = ref_dict[allele_name][f_a] * (2 - ref_dict[allele_name][f_a])
-        else:
-            q = (ref_dict[allele_name][f_a] + ref_dict[allele_name][o_a]) * (2 - (ref_dict[allele_name][f_a] +
-                                                                                  ref_dict[allele_name][o_a]))
-        return q
-    else:
-        return None
-
-
-def calculate_q_rus(str_list, allele_name, rus_dict, f_a, o_a, know):
+def calculate_q(str_list, allele_name, dict, f_a, o_a, know):
     q = None
     if allele_name in str_list:
         if know:
-            if f_a in rus_dict[allele_name]:
-                q = rus_dict[allele_name][f_a] * (2 - rus_dict[allele_name][f_a])
+            if f_a in dict[allele_name]:
+                q = dict[allele_name][f_a] * (2 - dict[allele_name][f_a])
             else:
-                q = rus_dict[allele_name]["pmin"] * (2 - rus_dict[allele_name]["pmin"])
+                q = dict[allele_name]["pmin"] * (2 - dict[allele_name]["pmin"])
         else:
-            if f_a in rus_dict[allele_name] and o_a in rus_dict[allele_name]:
-                q = (rus_dict[allele_name][f_a] + rus_dict[allele_name][o_a]) * (2 - (rus_dict[allele_name][f_a] +
-                                                                                      rus_dict[allele_name][o_a]))
-            elif f_a not in rus_dict[allele_name] and o_a in rus_dict[allele_name]:
-                q = (rus_dict[allele_name]["pmin"] + rus_dict[allele_name][o_a]) * (2 - (rus_dict[allele_name]["pmin"]
-                                                                                         + rus_dict[allele_name][o_a]))
-            elif f_a in rus_dict[allele_name] and o_a not in rus_dict[allele_name]:
-                q = (rus_dict[allele_name][f_a] + rus_dict[allele_name]["pmin"]) * (2 - (rus_dict[allele_name][f_a] +
-                                                                                         rus_dict[allele_name]["pmin"]))
-            elif f_a not in rus_dict[allele_name] and o_a not in rus_dict[allele_name]:
-                q = (rus_dict[allele_name]["pmin"] + rus_dict[allele_name]["pmin"]) * \
-                    (2 - (rus_dict[allele_name]["pmin"] + rus_dict[allele_name]["pmin"]))
+            if f_a in dict[allele_name] and o_a in dict[allele_name]:
+                q = (dict[allele_name][f_a] + dict[allele_name][o_a]) * (2 - (dict[allele_name][f_a] +
+                                                                              dict[allele_name][o_a]))
+            elif f_a not in dict[allele_name] and o_a in dict[allele_name]:
+                q = (dict[allele_name]["pmin"] + dict[allele_name][o_a]) * (2 - (dict[allele_name]["pmin"]
+                                                                                 + dict[allele_name][o_a]))
+            elif f_a in dict[allele_name] and o_a not in dict[allele_name]:
+                q = (dict[allele_name][f_a] + dict[allele_name]["pmin"]) * (2 - (dict[allele_name][f_a] +
+                                                                                 dict[allele_name]["pmin"]))
+            elif f_a not in dict[allele_name] and o_a not in dict[allele_name]:
+                q = (dict[allele_name]["pmin"] + dict[allele_name]["pmin"]) * \
+                    (2 - (dict[allele_name]["pmin"] + dict[allele_name]["pmin"]))
         return q
     else:
         return None
@@ -175,7 +166,6 @@ def main():
     kids = int(input("Enter the number of offsprings: "))
     population = input("Enter the population name: ")
     mut_rate = float(input("Enter the frequency of STR-locus mutation: "))
-    inx_mut = inx_mutation(number_of_pairs, kids, mut_rate)
     # Create dictionary with alleles frequencies
     ref_dict = empty_freq_table()
     ref_dict = calculate_frequencies(population, ref_dict)    # CHANGE population name
@@ -285,8 +275,8 @@ def main():
     index_list = temp_parents_df.index.values.tolist()
     list_for_pairs = []
     child_counter = 0
+    inx_mut = inx_mutation(number_of_pairs, kids, mut_rate)  # Get the indexes of kids with mutation
     n = copy.deepcopy(number_of_pairs)
-    random_str = None
     while n != 0:
         father = random.choice(index_list)
         mother = random.choice(index_list)
@@ -299,6 +289,7 @@ def main():
             kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, kids)])
             for k in range(kids):
                 kids_df.iloc[k]["№"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
+                random_str = None
                 q_old_codis_trio_ref = []
                 q_new_codis_trio_ref = []
                 q_old_codis_duo_ref = []
@@ -320,7 +311,6 @@ def main():
                             f_allele_random -= 1
                         else:
                             f_allele_random += 1
-                            print(allele, child_counter)
                     m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
                     m_allele_random = random.choice(m_alleles)
                     possible_alleles = [f_allele_random, m_allele_random]
@@ -361,21 +351,21 @@ def main():
                     if q_new_duo_ref:
                         q_new_codis_duo_ref.append(q_new_duo_ref)
                     # Choose the dictionary to calculate Q and Q_all for new ref in trio:
-                    q_old_trio_rus = calculate_q_rus(codis_old, allele, rus_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                    q_old_trio_rus = calculate_q(codis_old, allele, rus_dict, f_allele_trio, other_allele_trio,
+                                                 knowledge_trio)
                     if q_old_trio_rus:
                         q_old_codis_trio_rus.append(q_old_trio_rus)
-                    q_new_trio_rus = calculate_q_rus(codis_new, allele, rus_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                    q_new_trio_rus = calculate_q(codis_new, allele, rus_dict, f_allele_trio, other_allele_trio,
+                                                 knowledge_trio)
                     if q_new_trio_rus:
                         q_new_codis_trio_rus.append(q_new_trio_rus)
                     # Choose the dictionary to calculate Q and Q_all for new ref in duo:
-                    q_old_duo_rus = calculate_q_rus(codis_old, allele, rus_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                    q_old_duo_rus = calculate_q(codis_old, allele, rus_dict, f_allele_duo, other_allele_duo,
+                                                knowledge_duo)
                     if q_old_duo_rus:
                         q_old_codis_duo_rus.append(q_old_duo_rus)
-                    q_new_duo_rus = calculate_q_rus(codis_new, allele, rus_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                    q_new_duo_rus = calculate_q(codis_new, allele, rus_dict, f_allele_duo, other_allele_duo,
+                                                knowledge_duo)
                     if q_new_duo_rus:
                         q_new_codis_duo_rus.append(q_new_duo_rus)
                 kids_df.iloc[k]["population"] = pair_df.iloc[0]["population"]
@@ -441,7 +431,8 @@ def main():
                                                                                          kids_df.loc[[k]], 2, 2,
                                                                                          codis_new, father, mother)
                 offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]])
-                # Calculate PI and PP in a case of child and his potential fathers
+
+                # CALCULATE PI AND PP FOR FALSE POSITIVE FATHERS
                 # 1 old CODIS trio
                 for ii in ids1:
                     # create df for a pair of real mother and p father
@@ -465,8 +456,8 @@ def main():
                                 trio_freq_father_allele(m_alleles[0], m_alleles[1], kid_alleles[0], kid_alleles[1])
                             q_old_trio_ref = calculate_q(codis_old, allele, ref_dict, f_allele_trio,
                                                          other_allele_trio, knowledge_trio)
-                            q_old_trio_rus = calculate_q_rus(codis_old, allele, rus_dict, f_allele_trio,
-                                                             other_allele_trio, knowledge_trio)
+                            q_old_trio_rus = calculate_q(codis_old, allele, rus_dict, f_allele_trio,
+                                                         other_allele_trio, knowledge_trio)
                             if q_old_trio_ref:
                                 q_old_codis_trio_ref.append(q_old_trio_ref)
                             if q_old_trio_rus:
@@ -503,8 +494,8 @@ def main():
                                                                                                    kid_alleles[1])
                             q_old_duo_ref = calculate_q(codis_old, allele, ref_dict, f_allele_duo, other_allele_duo,
                                                         knowledge_duo)
-                            q_old_duo_rus = calculate_q_rus(codis_old, allele, rus_dict, f_allele_duo,
-                                                            other_allele_duo, knowledge_duo)
+                            q_old_duo_rus = calculate_q(codis_old, allele, rus_dict, f_allele_duo,
+                                                        other_allele_duo, knowledge_duo)
                             if q_old_duo_ref:
                                 q_old_codis_duo_ref.append(q_old_duo_ref)
                             if q_old_duo_rus:
@@ -544,8 +535,8 @@ def main():
                                 trio_freq_father_allele(m_alleles[0], m_alleles[1], kid_alleles[0], kid_alleles[1])
                             q_new_trio_ref = calculate_q(codis_new, allele, ref_dict, f_allele_trio,
                                                          other_allele_trio, knowledge_trio)
-                            q_new_trio_rus = calculate_q_rus(codis_new, allele, rus_dict, f_allele_trio,
-                                                             other_allele_trio, knowledge_trio)
+                            q_new_trio_rus = calculate_q(codis_new, allele, rus_dict, f_allele_trio,
+                                                         other_allele_trio, knowledge_trio)
                             if q_new_trio_ref:
                                 q_new_codis_trio_ref.append(q_new_trio_ref)
                             if q_new_trio_rus:
@@ -582,8 +573,8 @@ def main():
                                                                                                    kid_alleles[1])
                             q_new_duo_ref = calculate_q(codis_new, allele, ref_dict, f_allele_duo,
                                                         other_allele_duo, knowledge_duo)
-                            q_new_duo_rus = calculate_q_rus(codis_new, allele, rus_dict, f_allele_duo,
-                                                            other_allele_duo, knowledge_duo)
+                            q_new_duo_rus = calculate_q(codis_new, allele, rus_dict, f_allele_duo,
+                                                        other_allele_duo, knowledge_duo)
                             if q_new_duo_ref:
                                 q_new_codis_duo_ref.append(q_new_duo_ref)
                             if q_new_duo_rus:
@@ -602,6 +593,8 @@ def main():
                     pot_father_df.iloc[0]["Child_ID"] = kids_df.iloc[k]["№"]
                     offsprings_df = pd.concat([offsprings_df, pot_father_df])
                 child_counter += 1
+
+                # CALCULATE LR
             n -= 1
     offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=False)
