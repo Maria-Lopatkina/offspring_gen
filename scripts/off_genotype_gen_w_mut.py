@@ -285,6 +285,7 @@ def main():
     columns_list.append("LR_ref_fp_father")
     columns_list.append("LR_rus_fp_father")
     offsprings_df = pd.DataFrame(columns=columns_list)
+    new_pair_df = pd.DataFrame(columns=columns_list, index = [0, 1])
     temp_parents_df = parents_df.loc[(parents_df['population'] == population)]
     index_list = temp_parents_df.index.values.tolist()
     list_for_pairs = []
@@ -301,13 +302,9 @@ def main():
             pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
             kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, kids)])
             for k in range(kids):
-                pair_df.iloc[0]["Status"] = "real_father"
-                pair_df.iloc[1]["Status"] = "real_mother"
                 kids_df.iloc[k]["Status"] = "kid"
                 kids_df.iloc[k]["№"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
-                pair_df.iloc[0]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
-                pair_df.iloc[1]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
-                offsprings_df = pd.concat([offsprings_df, pair_df])  # parents data in output
+                # offsprings_df = pd.concat([offsprings_df, pair_df])  # parents data in output
                 random_str = None
                 q_old_codis_trio_ref = []
                 q_new_codis_trio_ref = []
@@ -387,7 +384,6 @@ def main():
                                                 knowledge_duo)
                     if q_new_duo_rus:
                         q_new_codis_duo_rus.append(q_new_duo_rus)
-                kids_df.iloc[k]["population"] = pair_df.iloc[0]["population"]
                 multiplication_old_trio_ref = 1
                 multiplication_old_duo_ref = 1
                 multiplication_new_trio_ref = 1
@@ -432,6 +428,8 @@ def main():
                 kids_df.iloc[k]["PI_new_CODIS_duo_rus"] = 1 / multiplication_new_duo_rus
                 kids_df.iloc[k]["PP_new_CODIS_duo_rus"] = 1 / (1 + multiplication_new_duo_rus)
                 kids_df.iloc[k]["PI_CODIS_15_trio"] = 1 / multiplication_15_trio
+                kids_df.iloc[k]["population"] = pair_df.iloc[0]["population"]
+                kids_df.iloc[k]["Child_ID"] = kids_df.iloc[k]["№"]
                 # Find potential fathers for every child:
                 kids_df.iloc[k]["number_of_p_fathers_old_CODIS_trio"], ids1 = find_father(index_list, columns_list,
                                                                                           temp_parents_df,
@@ -449,8 +447,15 @@ def main():
                                                                                          temp_parents_df,
                                                                                          kids_df.loc[[k]], 2, 2,
                                                                                          codis_new, father, mother)
+                for elem in range(len(columns_list) - 38):
+                    new_pair_df.iloc[0][columns_list[elem]] = pair_df.iloc[0][columns_list[elem]]
+                    new_pair_df.iloc[1][columns_list[elem]] = pair_df.iloc[1][columns_list[elem]]
+                new_pair_df.iloc[0]["Status"] = "real_father"
+                new_pair_df.iloc[1]["Status"] = "real_mother"
+                new_pair_df.iloc[0]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
+                new_pair_df.iloc[1]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
+                offsprings_df = pd.concat([offsprings_df, new_pair_df])
                 offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]])
-
                 # CALCULATE PI AND PP FOR FALSE POSITIVE FATHERS
                 # 1 old CODIS trio
                 for ii in ids1:
@@ -619,7 +624,7 @@ def main():
 
                 # CALCULATE LR
             n -= 1
-    offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
+    # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=False)
     print(round(time.time() - start, 2), 's')
 
