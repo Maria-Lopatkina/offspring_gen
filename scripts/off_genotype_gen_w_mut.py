@@ -773,8 +773,7 @@ def main():
                 child_counter += 1
 
                 #################################################
-                # CALCULATE LR FOR REAL PARENTS AND FALSE POSITIVE FATHERS
-                # LR for parents
+                # CALCULATE LR FOR REAL PARENTS
                 df_for_lr = offsprings_df.loc[(offsprings_df['Child_ID'] == kids_df.iloc[k]["№"])]
                 inx_lr = df_for_lr.index.values.tolist()
                 real_father_df = df_for_lr.iloc[[0]]  # real father data
@@ -993,9 +992,153 @@ def main():
                 offsprings_df.iloc[inx_lr[1]]["LR_ref_duo_new_codis"] = multiplication_29 / multiplication_30
                 offsprings_df.iloc[inx_lr[1]]["LR_rus_duo_new_codis"] = multiplication_31 / multiplication_32
 
-
-
-
+                #################################################
+                # CALCULATE LR FOR FALSE POSITIVE FATHERS
+                for ii in range(3, len(df_for_lr.index)):
+                    p_hyp1_list_ref = []
+                    p_hyp2_list_ref = []
+                    p_hyp1_list_rus = []
+                    p_hyp2_list_rus = []
+                    one_pf_df = offsprings_df.iloc[[df_for_lr.index[ii]]]  # df with one PF data
+                    name = one_pf_df.iloc[0]['№'].split("_")
+                    if ("old" in name) and ("trio" in name):
+                        for loc in range(1, len(columns_list) - 33, 2):
+                            el = columns_list[loc].split('_')[0]
+                            if el in codis_old:
+                                pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                rm = [real_mother_df.iloc[0][columns_list[loc]],
+                                      real_mother_df.iloc[0][columns_list[loc + 1]]]
+                                rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
+                                pf.sort()
+                                rm.sort()
+                                rc.sort()
+                                # check if there is a mutation:
+                                lack_of_mut = father_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1])
+                                if lack_of_mut:
+                                    p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                         el)
+                                else:
+                                    p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                      el, mut_rate)
+                                p_hyp1_list_ref.append(p_1)
+                                p_hyp2_list_ref.append(p_2)
+                                p_hyp1_list_rus.append(p_3)
+                                p_hyp2_list_rus.append(p_4)
+                        multiplication_1 = 1
+                        multiplication_2 = 1
+                        multiplication_3 = 1
+                        multiplication_4 = 1
+                        for m in p_hyp1_list_ref:
+                            multiplication_1 *= m
+                        for m in p_hyp2_list_ref:
+                            multiplication_2 *= m
+                        for m in p_hyp1_list_rus:
+                            multiplication_3 *= m
+                        for m in p_hyp2_list_rus:
+                            multiplication_4 *= m
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_old_codis"] = multiplication_3 / multiplication_4
+                    if "old" in name and "duo" in name:
+                        for loc in range(1, len(columns_list) - 33, 2):
+                            el = columns_list[loc].split('_')[0]
+                            if el in codis_old:
+                                pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
+                                pf.sort()
+                                rc.sort()
+                                lack_of_mut = father_duo(pf[0], pf[1], rc[0], rc[1])  # check if there is mutation
+                                if lack_of_mut:
+                                    p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                        el)
+                                else:
+                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                                p_hyp1_list_ref.append(p_1)
+                                p_hyp2_list_ref.append(p_2)
+                                p_hyp1_list_rus.append(p_3)
+                                p_hyp2_list_rus.append(p_4)
+                        multiplication_1 = 1
+                        multiplication_2 = 1
+                        multiplication_3 = 1
+                        multiplication_4 = 1
+                        for m in p_hyp1_list_ref:
+                            multiplication_1 *= m
+                        for m in p_hyp2_list_ref:
+                            multiplication_2 *= m
+                        for m in p_hyp1_list_rus:
+                            multiplication_3 *= m
+                        for m in p_hyp2_list_rus:
+                            multiplication_4 *= m
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_old_codis"] = multiplication_1 / multiplication_2
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_old_codis"] = multiplication_3 / multiplication_4
+                    if "new" in name and "trio" in name:
+                        for loc in range(1, len(columns_list) - 33, 2):
+                            el = columns_list[loc].split('_')[0]
+                            if el in codis_new:
+                                pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                rm = [real_mother_df.iloc[0][columns_list[loc]],
+                                      real_mother_df.iloc[0][columns_list[loc + 1]]]
+                                rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
+                                pf.sort()
+                                rm.sort()
+                                rc.sort()
+                                # check if there is mutation:
+                                lack_of_mut = father_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1])
+                                if lack_of_mut:
+                                    p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                         el)
+                                else:
+                                    p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                      el, mut_rate)
+                                p_hyp1_list_ref.append(p_1)
+                                p_hyp2_list_ref.append(p_2)
+                                p_hyp1_list_rus.append(p_3)
+                                p_hyp2_list_rus.append(p_4)
+                        multiplication_1 = 1
+                        multiplication_2 = 1
+                        multiplication_3 = 1
+                        multiplication_4 = 1
+                        for m in p_hyp1_list_ref:
+                            multiplication_1 *= m
+                        for m in p_hyp2_list_ref:
+                            multiplication_2 *= m
+                        for m in p_hyp1_list_rus:
+                            multiplication_3 *= m
+                        for m in p_hyp2_list_rus:
+                            multiplication_4 *= m
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_new_codis"] = multiplication_1 / multiplication_2
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_new_codis"] = multiplication_3 / multiplication_4
+                    if "new" in name and "duo" in name:
+                        for loc in range(1, len(columns_list) - 33, 2):
+                            el = columns_list[loc].split('_')[0]
+                            if el in codis_new:
+                                pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
+                                pf.sort()
+                                rc.sort()
+                                lack_of_mut = father_duo(pf[0], pf[1], rc[0], rc[1])  # check if there is mutation
+                                if lack_of_mut:
+                                    p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
+                                                                        el)
+                                else:
+                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                                p_hyp1_list_ref.append(p_1)
+                                p_hyp2_list_ref.append(p_2)
+                                p_hyp1_list_rus.append(p_3)
+                                p_hyp2_list_rus.append(p_4)
+                        multiplication_1 = 1
+                        multiplication_2 = 1
+                        multiplication_3 = 1
+                        multiplication_4 = 1
+                        for m in p_hyp1_list_ref:
+                            multiplication_1 *= m
+                        for m in p_hyp2_list_ref:
+                            multiplication_2 *= m
+                        for m in p_hyp1_list_rus:
+                            multiplication_3 *= m
+                        for m in p_hyp2_list_rus:
+                            multiplication_4 *= m
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_new_codis"] = multiplication_1 / multiplication_2
+                        offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_new_codis"] = multiplication_3 / multiplication_4
             n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=True)
