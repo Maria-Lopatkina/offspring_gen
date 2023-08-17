@@ -423,9 +423,6 @@ def main():
     columns_list.append("LR_rus_duo_old_codis")
     columns_list.append("LR_ref_duo_new_codis")
     columns_list.append("LR_rus_duo_new_codis")
-    # Add columns for LR calculations (for false positive fathers)
-    columns_list.append("LR_ref_fp_father")
-    columns_list.append("LR_rus_fp_father")
     offsprings_df = pd.DataFrame(columns=columns_list)
     new_pair_df = pd.DataFrame(columns=columns_list, index = [0, 1])
     temp_parents_df = parents_df.loc[(parents_df['population'] == population)]
@@ -461,7 +458,7 @@ def main():
                 if child_counter in inx_mut:
                     random_str = random.choice(all_str)
                     count_of_mismatch_rf += 1
-                for elem in range(1, len(columns_list) - 35, 2):
+                for elem in range(1, len(columns_list) - 33, 2):
                     allele = columns_list[elem].split('_')[0]
                     f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                     f_allele_random = random.choice(f_alleles)
@@ -593,7 +590,7 @@ def main():
                                                                                          temp_parents_df,
                                                                                          kids_df.loc[[k]], 2, 2,
                                                                                          codis_new, father, mother)
-                for elem in range(len(columns_list) - 34):
+                for elem in range(len(columns_list) - 32):
                     new_pair_df.iloc[0][columns_list[elem]] = pair_df.iloc[0][columns_list[elem]]
                     new_pair_df.iloc[1][columns_list[elem]] = pair_df.iloc[1][columns_list[elem]]
                 new_pair_df.iloc[0]["Status"] = "real_father"
@@ -601,8 +598,8 @@ def main():
                 new_pair_df.iloc[0]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
                 new_pair_df.iloc[1]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
                 new_pair_df.iloc[1]["number_of_mutations"] = 0
-                offsprings_df = pd.concat([offsprings_df, new_pair_df])
-                offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]])
+                offsprings_df = pd.concat([offsprings_df, new_pair_df], ignore_index=True)
+                offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
 
                 #################################################
                 # CALCULATE PI AND PP FOR FALSE POSITIVE FATHERS
@@ -614,7 +611,7 @@ def main():
                     pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_old_codis_trio"
                     q_old_codis_trio_ref = []
                     q_old_codis_trio_rus = []
-                    for elem in range(1, len(columns_list) - 35, 2):
+                    for elem in range(1, len(columns_list) - 33, 2):
                         allele = columns_list[elem].split('_')[0]
                         pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                         pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -649,7 +646,7 @@ def main():
                     pot_father_df.iloc[0]["Child_ID"] = kids_df.iloc[k]["№"]
                     pot_father_df.iloc[0]["Status"] = "false_positive_father"
                     pot_father_df.iloc[0]["number_of_mutations"] = len(ids1[ii])
-                    offsprings_df = pd.concat([offsprings_df, pot_father_df])
+                    offsprings_df = pd.concat([offsprings_df, pot_father_df], ignore_index=True)
                 # 2 old CODIS duo
                 for ii in ids2:
                     p_pair_df = temp_parents_df.loc[[ii, mother]]
@@ -657,7 +654,7 @@ def main():
                     pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_old_codis_duo"
                     q_old_codis_duo_ref = []
                     q_old_codis_duo_rus = []
-                    for elem in range(1, len(columns_list) - 35, 2):
+                    for elem in range(1, len(columns_list) - 33, 2):
                         allele = columns_list[elem].split('_')[0]
                         pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                         pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -689,7 +686,7 @@ def main():
                     pot_father_df.iloc[0]["Child_ID"] = kids_df.iloc[k]["№"]
                     pot_father_df.iloc[0]["Status"] = "false_positive_father"
                     pot_father_df.iloc[0]["number_of_mutations"] = len(ids2[ii])
-                    offsprings_df = pd.concat([offsprings_df, pot_father_df])
+                    offsprings_df = pd.concat([offsprings_df, pot_father_df], ignore_index=True)
                 # 3 new CODIS trio
                 for ii in ids3:
                     p_pair_df = temp_parents_df.loc[[ii, mother]]
@@ -697,7 +694,7 @@ def main():
                     pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_new_codis_trio"
                     q_new_codis_trio_ref = []
                     q_new_codis_trio_rus = []
-                    for elem in range(1, len(columns_list) - 35, 2):
+                    for elem in range(1, len(columns_list) - 33, 2):
                         allele = columns_list[elem].split('_')[0]
                         pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                         pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -732,7 +729,7 @@ def main():
                     pot_father_df.iloc[0]["Child_ID"] = kids_df.iloc[k]["№"]
                     pot_father_df.iloc[0]["Status"] = "false_positive_father"
                     pot_father_df.iloc[0]["number_of_mutations"] = len(ids3[ii])
-                    offsprings_df = pd.concat([offsprings_df, pot_father_df])
+                    offsprings_df = pd.concat([offsprings_df, pot_father_df], ignore_index=True)
                 # 4 new CODIS duo
                 for ii in ids4:
                     p_pair_df = temp_parents_df.loc[[ii, mother]]
@@ -740,7 +737,7 @@ def main():
                     pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_new_codis_duo"
                     q_new_codis_duo_ref = []
                     q_new_codis_duo_rus = []
-                    for elem in range(1, len(columns_list) - 35, 2):
+                    for elem in range(1, len(columns_list) - 33, 2):
                         allele = columns_list[elem].split('_')[0]
                         pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                         pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -772,17 +769,17 @@ def main():
                     pot_father_df.iloc[0]["Child_ID"] = kids_df.iloc[k]["№"]
                     pot_father_df.iloc[0]["Status"] = "false_positive_father"
                     pot_father_df.iloc[0]["number_of_mutations"] = len(ids4[ii])
-                    offsprings_df = pd.concat([offsprings_df, pot_father_df])
+                    offsprings_df = pd.concat([offsprings_df, pot_father_df], ignore_index=True)
                 child_counter += 1
 
                 #################################################
                 # CALCULATE LR FOR REAL PARENTS AND FALSE POSITIVE FATHERS
                 # LR for parents
                 df_for_lr = offsprings_df.loc[(offsprings_df['Child_ID'] == kids_df.iloc[k]["№"])]
-                new_index = 0
+                inx_lr = df_for_lr.index.values.tolist()
                 real_father_df = df_for_lr.iloc[[0]]  # real father data
                 real_mother_df = df_for_lr.iloc[[1]]  # real mother data
-                child_df = df_for_lr.iloc[[2]]  # df with 1st, 2nd and 3rd child's data
+                child_df = df_for_lr.iloc[[2]]  # df with 1st, 2nd or 3rd child's data
                 hyp1_ref_trio_old_f = []
                 hyp2_ref_trio_old_f = []
                 hyp1_rus_trio_old_f = []
@@ -815,7 +812,7 @@ def main():
                 hyp2_ref_duo_new_m = []
                 hyp1_rus_duo_new_m = []
                 hyp2_rus_duo_new_m = []
-                for loc in range(1, len(columns_list) - 35, 2):
+                for loc in range(1, len(columns_list) - 33, 2):
                     el = columns_list[loc].split('_')[0]
                     rf = [real_father_df.iloc[0][columns_list[loc]], real_father_df.iloc[0][columns_list[loc + 1]]]
                     rm = [real_mother_df.iloc[0][columns_list[loc]], real_mother_df.iloc[0][columns_list[loc + 1]]]
@@ -978,37 +975,30 @@ def main():
                     multiplication_31 *= m
                 for m in hyp2_rus_duo_new_m:
                     multiplication_32 *= m
-
-
-
-
-
-
-                # Start here next time
-                output_df.iloc[new_index]["LR_ref_trio_old_codis_f"] = multiplication_1 / multiplication_2
-                output_df.iloc[new_index]["LR_rus_trio_old_codis_f"] = multiplication_3 / multiplication_4
-                output_df.iloc[new_index]["LR_ref_trio_new_codis_f"] = multiplication_5 / multiplication_6
-                output_df.iloc[new_index]["LR_rus_trio_new_codis_f"] = multiplication_7 / multiplication_8
-                output_df.iloc[new_index]["LR_ref_duo_old_codis_f"] = multiplication_9 / multiplication_10
-                output_df.iloc[new_index]["LR_rus_duo_old_codis_f"] = multiplication_11 / multiplication_12
-                output_df.iloc[new_index]["LR_ref_duo_new_codis_f"] = multiplication_13 / multiplication_14
-                output_df.iloc[new_index]["LR_rus_duo_new_codis_f"] = multiplication_15 / multiplication_16
-                output_df.iloc[new_index]["LR_ref_trio_old_codis_m"] = multiplication_17 / multiplication_18
-                output_df.iloc[new_index]["LR_rus_trio_old_codis_m"] = multiplication_19 / multiplication_20
-                output_df.iloc[new_index]["LR_ref_trio_new_codis_m"] = multiplication_21 / multiplication_22
-                output_df.iloc[new_index]["LR_rus_trio_new_codis_m"] = multiplication_23 / multiplication_24
-                output_df.iloc[new_index]["LR_ref_duo_old_codis_m"] = multiplication_25 / multiplication_26
-                output_df.iloc[new_index]["LR_rus_duo_old_codis_m"] = multiplication_27 / multiplication_28
-                output_df.iloc[new_index]["LR_ref_duo_new_codis_m"] = multiplication_29 / multiplication_30
-                output_df.iloc[new_index]["LR_rus_duo_new_codis_m"] = multiplication_31 / multiplication_32
-                new_index += 1
+                offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
+                offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
+                offsprings_df.iloc[inx_lr[0]]["LR_rus_trio_old_codis"] = multiplication_3 / multiplication_4
+                offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_new_codis"] = multiplication_5 / multiplication_6
+                offsprings_df.iloc[inx_lr[0]]["LR_rus_trio_new_codis"] = multiplication_7 / multiplication_8
+                offsprings_df.iloc[inx_lr[0]]["LR_ref_duo_old_codis"] = multiplication_9 / multiplication_10
+                offsprings_df.iloc[inx_lr[0]]["LR_rus_duo_old_codis"] = multiplication_11 / multiplication_12
+                offsprings_df.iloc[inx_lr[0]]["LR_ref_duo_new_codis"] = multiplication_13 / multiplication_14
+                offsprings_df.iloc[inx_lr[0]]["LR_rus_duo_new_codis"] = multiplication_15 / multiplication_16
+                offsprings_df.iloc[inx_lr[1]]["LR_ref_trio_old_codis"] = multiplication_17 / multiplication_18
+                offsprings_df.iloc[inx_lr[1]]["LR_rus_trio_old_codis"] = multiplication_19 / multiplication_20
+                offsprings_df.iloc[inx_lr[1]]["LR_ref_trio_new_codis"] = multiplication_21 / multiplication_22
+                offsprings_df.iloc[inx_lr[1]]["LR_rus_trio_new_codis"] = multiplication_23 / multiplication_24
+                offsprings_df.iloc[inx_lr[1]]["LR_ref_duo_old_codis"] = multiplication_25 / multiplication_26
+                offsprings_df.iloc[inx_lr[1]]["LR_rus_duo_old_codis"] = multiplication_27 / multiplication_28
+                offsprings_df.iloc[inx_lr[1]]["LR_ref_duo_new_codis"] = multiplication_29 / multiplication_30
+                offsprings_df.iloc[inx_lr[1]]["LR_rus_duo_new_codis"] = multiplication_31 / multiplication_32
 
 
 
 
             n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
-    offsprings_df.to_excel("NEW_output.xlsx", index=False)
+    offsprings_df.to_excel("NEW_output.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
