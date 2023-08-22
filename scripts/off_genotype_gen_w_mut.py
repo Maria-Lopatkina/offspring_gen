@@ -1,7 +1,8 @@
 import copy
-import random
 import pandas as pd
+import random
 import time
+import yaml
 
 
 def empty_freq_table():  # Create empty dictionaries for allele frequencies
@@ -309,13 +310,11 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
 
 def main():
     start = time.time()
-    number_of_pairs = int(input("Enter the number of pairs: "))
-    kids = int(input("Enter the number of offsprings: "))
-    population = input("Enter the population name: ")
-    mut_rate = float(input("Enter the frequency of STR-locus mutation: "))
+    with open("config_file.yaml", "r") as yaml_file:
+        config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dictionary with alleles frequencies
     ref_dict = empty_freq_table()
-    ref_dict = calculate_frequencies(population, ref_dict)    # CHANGE population name
+    ref_dict = calculate_frequencies(config["population"], ref_dict)    # CHANGE population name
     rus_dict = {"CSF1PO": {7: 0.0004, 8: 0.0012, 9: 0.0438, 10: 0.2824, 11: 0.2882, 12: 0.3062, 13: 0.0617, 14: 0.0127,
                            15: 0.0032, 16: 0.0003, "pmin": 0.0003},
                 "D3S1358": {10: 0.0003, 11: 0.0008, 12: 0.0005, 13: 0.0014, 14: 0.1073, 15: 0.2721, 16: 0.268,
@@ -425,12 +424,13 @@ def main():
     columns_list.append("LR_rus_duo_new_codis")
     offsprings_df = pd.DataFrame(columns=columns_list)
     new_pair_df = pd.DataFrame(columns=columns_list, index = [0, 1])
-    temp_parents_df = parents_df.loc[(parents_df['population'] == population)]
+    temp_parents_df = parents_df.loc[(parents_df['population'] == config["population"])]
     index_list = temp_parents_df.index.values.tolist()
     list_for_pairs = []
     child_counter = 0
-    inx_mut = inx_mutation(number_of_pairs, kids, mut_rate)  # Get the indexes of kids with mutation
-    n = copy.deepcopy(number_of_pairs)
+    # Get the indexes of kids with mutation:
+    inx_mut = inx_mutation(config["number_of_pairs"], config["kids"], config["mut_rate"])
+    n = copy.deepcopy(config["number_of_pairs"])
     while n != 0:
         father = random.choice(index_list)
         mother = random.choice(index_list)
@@ -439,8 +439,8 @@ def main():
         if pair not in list_for_pairs and father != mother:
             list_for_pairs.append(pair)
             pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
-            kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, kids)])
-            for k in range(kids):
+            kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
+            for k in range(config["kids"]):
                 kids_df.iloc[k]["Status"] = "kid"
                 kids_df.iloc[k]["№"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
                 # offsprings_df = pd.concat([offsprings_df, pair_df])  # parents data in output
@@ -825,7 +825,8 @@ def main():
                         if lack_of_mut_trio:
                             p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
                         else:
-                            p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                            p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el,
+                                                          config["mut_rate"])
                         hyp1_ref_trio_old_f.append(p1)
                         hyp2_ref_trio_old_f.append(p2)
                         hyp1_rus_trio_old_f.append(p3)
@@ -839,7 +840,7 @@ def main():
                         if lack_of_mut_duo:
                             p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
                         else:
-                            p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                            p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, config["mut_rate"])
                         hyp1_ref_duo_old_f.append(p1)
                         hyp2_ref_duo_old_f.append(p2)
                         hyp1_rus_duo_old_f.append(p3)
@@ -854,7 +855,8 @@ def main():
                         if lack_of_mut_trio:
                             p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
                         else:
-                            p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                            p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el,
+                                                          config["mut_rate"])
                         hyp1_ref_trio_new_f.append(p1)
                         hyp2_ref_trio_new_f.append(p2)
                         hyp1_rus_trio_new_f.append(p3)
@@ -868,7 +870,7 @@ def main():
                         if lack_of_mut_duo:
                             p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
                         else:
-                            p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                            p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, config["mut_rate"])
                         hyp1_ref_duo_new_f.append(p1)
                         hyp2_ref_duo_new_f.append(p2)
                         hyp1_rus_duo_new_f.append(p3)
@@ -1019,7 +1021,7 @@ def main():
                                                                          el)
                                 else:
                                     p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                      el, mut_rate)
+                                                                      el, config["mut_rate"])
                                 p_hyp1_list_ref.append(p_1)
                                 p_hyp2_list_ref.append(p_2)
                                 p_hyp1_list_rus.append(p_3)
@@ -1051,7 +1053,8 @@ def main():
                                     p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
                                                                         el)
                                 else:
-                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el,
+                                                                     config["mut_rate"])
                                 p_hyp1_list_ref.append(p_1)
                                 p_hyp2_list_ref.append(p_2)
                                 p_hyp1_list_rus.append(p_3)
@@ -1088,7 +1091,7 @@ def main():
                                                                          el)
                                 else:
                                     p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                      el, mut_rate)
+                                                                      el, config["mut_rate"])
                                 p_hyp1_list_ref.append(p_1)
                                 p_hyp2_list_ref.append(p_2)
                                 p_hyp1_list_rus.append(p_3)
@@ -1120,7 +1123,8 @@ def main():
                                     p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
                                                                         el)
                                 else:
-                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, mut_rate)
+                                    p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el,
+                                                                     config["mut_rate"])
                                 p_hyp1_list_ref.append(p_1)
                                 p_hyp2_list_ref.append(p_2)
                                 p_hyp1_list_rus.append(p_3)
