@@ -5,8 +5,8 @@ import time
 import yaml
 
 
-def empty_freq_table():  # Create empty dictionaries for allele frequencies
-    freq_df = pd.read_excel("../ASTR22_main.xlsx")
+def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
+    freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
     key_dict = []
     for el in range(1, len(f_columns) - 2, 2):
@@ -15,8 +15,8 @@ def empty_freq_table():  # Create empty dictionaries for allele frequencies
     return freq_dict
 
 
-def calculate_frequencies(p, d):  # Calculate alleles frequencies
-    freq_df = pd.read_excel("../ASTR22_main.xlsx")
+def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
+    freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
     temp_freq_df = freq_df.loc[(freq_df['population'] == p)]
     for al in range(1, len(f_columns) - 2, 2):
@@ -422,8 +422,8 @@ def main():
     columns_list.append("LR_rus_duo_new_codis")
     offsprings_df = pd.DataFrame(columns=columns_list)
     for pop in config["populations"]:
-        ref_dict = empty_freq_table()
-        ref_dict = calculate_frequencies(pop, ref_dict)
+        ref_dict = empty_freq_table(config["main_table_path"])
+        ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
         new_pair_df = pd.DataFrame(columns=columns_list, index = [0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
