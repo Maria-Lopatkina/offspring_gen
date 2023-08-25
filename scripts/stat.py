@@ -1,3 +1,5 @@
+from scipy.stats import chisquare
+from scipy.stats import chi2_contingency
 import pandas as pd
 import time
 import yaml
@@ -41,7 +43,6 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
 
 def calculate_frequencies_for_gen_data (d, table):  # Calculate alleles frequencies for generated population
     f_columns = table.columns.values.tolist()
-    print(f_columns)
     for al in range(2, len(f_columns) - 33, 2):
         allele_name = f_columns[al].split('_')[0]
         allele_df_1 = table.iloc[:, [al]]
@@ -77,10 +78,21 @@ def main():
         temp_obs_df = obs_freq_df.loc[(obs_freq_df['population'] == pop) & (obs_freq_df['Status'] == "kid")]
         obs_dict = empty_freq_table(config["main_table_path"])
         obs_dict = calculate_frequencies_for_gen_data(obs_dict, temp_obs_df)
-
-
-
-
+        all_p_val = []
+        for locus in obs_dict.keys():
+            exp = []
+            obs = []
+            for repeat in ref_dict[locus].keys():
+                exp.append(ref_dict[locus][repeat] * config["number_of_pairs"] * config["kids"])
+                obs.append(obs_dict[locus][repeat] * config["number_of_pairs"] * config["kids"])
+            # add check for cases of different len(dict[locus])
+            p_value = chisquare(exp, obs)[1]
+            significance_level = 0.05
+            if p_value >= significance_level:
+                all_p_val.append(0)
+            else:
+                all_p_val.append(1)
+        # if 1 in all_p_val:
 
 
 if __name__ == "__main__":
