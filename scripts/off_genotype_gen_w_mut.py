@@ -248,8 +248,8 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
                      (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
             elif k1 not in dic[allele] and k2 not in dic[allele]:
                 p1 = (dic[allele]["pmin"] + dic[allele]["pmin"]) * (2 - (dic[allele]["pmin"] + dic[allele]["pmin"]))
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) \
-                     - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
+                p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] *
+                      (2 - dic[allele]["pmin"]) - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2)
         else:
             for i in k1, k2:
                 for j in f1, f2:
@@ -272,8 +272,8 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
                 p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
             elif k1 not in dic[allele] and k2 not in dic[allele]:
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) \
-                     - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
+                p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] *
+                      (2 - dic[allele]["pmin"]) - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2)
     return p1, p2
 
 
@@ -306,82 +306,12 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
     return p1, p2
 
 
-
-
 def main():
     start = time.time()
     with open("config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    # Create dictionary with alleles frequencies
-    rus_dict = {"CSF1PO": {7: 0.0004, 8: 0.0012, 9: 0.0438, 10: 0.2824, 11: 0.2882, 12: 0.3062, 13: 0.0617, 14: 0.0127,
-                           15: 0.0032, 16: 0.0003, "pmin": 0.0003},
-                "D3S1358": {10: 0.0003, 11: 0.0008, 12: 0.0005, 13: 0.0014, 14: 0.1073, 15: 0.2721, 16: 0.268,
-                            17: 0.2148, 18: 0.1244, 19: 0.0096, 20: 0.0009, 21: 0.0003, "pmin": 0.0003},
-                "D7S820": {6: 0.0003, 7: 0.012, 7.3: 0.0003, 8: 0.1701, 8.1: 0.0003, 9: 0.1261, 10: 0.2763,
-                           10.1: 0.0003, 10.3: 0.0003, 11: 0.2223, 11.1: 0.0033, 11.2: 0.0003, 11.3: 0.0003,
-                           12: 0.1549, 12.1: 0.0004, 13: 0.0296, 13.1: 0.0003, 14: 0.0037, 15: 0.0003, "pmin": 0.0003},
-                "D8S1179": {6: 0.0003, 8: 0.0082, 9: 0.0083, 10: 0.0702, 11: 0.0725, 11.3: 0.0003, 12: 0.1596,
-                            12.3: 0.0003, 13: 0.3284, 14: 0.2182, 15: 0.1019, 16: 0.0277, 17: 0.0046, 18: 0.0003,
-                            "pmin": 0.0003},
-                "D16S539": {7: 0.0003, 8: 0.0118, 9: 0.119, 10: 0.0709, 11: 0.2732, 12: 0.3105, 13: 0.1823, 14: 0.0295,
-                            15: 0.0024, 16: 0.0003, "pmin": 0.0003},
-                "D18S51": {9: 0.0003, 10: 0.0081, 11: 0.0148, 12: 0.0906, 12.3: 0.0003, 13: 0.1142, 14: 0.1647,
-                           14.2: 0.0003, 15: 0.1643, 16: 0.1576, 16.2: 0.0003, 17: 0.1251, 18: 0.0747, 19: 0.0422,
-                           20: 0.0207, 21: 0.0131, 21.1: 0.0003, 22: 0.0058, 23: 0.0021, 24: 0.0012, 25: 0.0003,
-                           30: 0.0003, "pmin": 0.0003},
-                "D21S11": {25: 0.0007, 25.2: 0.0003, 26: 0.0026, 27: 0.0212, 27.2: 0.0003, 28: 0.1557, 28.2: 0.0008,
-                           28.3: 0.0003, 29: 0.2048, 29.1: 0.0003, 29.2: 0.0014, 29.3: 0.0003, 30: 0.2362, 30.2: 0.056,
-                           31: 0.0698, 31.2: 0.0899, 32: 0.0103, 32.1: 0.0003, 32.2: 0.1043, 33: 0.0012, 33.1: 0.0003,
-                           33.2: 0.0392, 34: 0.0003, 34.2: 0.0045, 35.2: 0.0003, "pmin": 0.0003},
-                "FGA": {16: 0.0006, 17: 0.0007, 18: 0.0152, 18.2: 0.0003, 19: 0.0726, 19.2: 0.0003, 20: 0.121,
-                        20.2: 0.0015, 21: 0.1675, 21.2: 0.0024, 21.3: 0.0003, 22: 0.1966, 22.1: 0.0003, 22.2: 0.0107,
-                        22.3: 0.0003, 23: 0.1421, 23.2: 0.0066, 24: 0.1424, 24.1: 0.0003, 24.2: 0.0017, 25: 0.0823,
-                        25.1: 0.0003, 25.2: 0.0004, 26: 0.0276, 27: 0.0061, 28: 0.0009, 29: 0.0003, 33: 0.0003,
-                        "pmin": 0.0003},
-                "TH01": {5: 0.0005, 6: 0.2295, 7: 0.1626, 7.3: 0.0003, 8: 0.1068, 8.3: 0.0003, 9: 0.2065, 9.3: 0.2845,
-                         10: 0.0086, 10.3: 0.0006, 11: 0.0003, "pmin": 0.0003},
-                "TPOX": {5: 0.0003, 6: 0.0003, 7: 0.0013, 8: 0.5551, 9: 0.088, 10: 0.0553, 11: 0.2666, 12: 0.0323,
-                         13: 0.0011, "pmin": 0.0003},
-                "vWA": {12: 0.0003, 13: 0.0022, 14: 0.0956, 15: 0.1058, 16: 0.1882, 17: 0.2905, 18: 0.2211, 19: 0.082,
-                        20: 0.0131, 21: 0.0013, "pmin": 0.0003},
-                "D1S1656": {8: 0.0004, 9: 0.0003, 10: 0.0016, 11: 0.1033, 12: 0.1192, 13: 0.0698, 13.2: 0.0003,
-                            14: 0.0763, 14.2: 0.0003, 14.3: 0.0011, 15: 0.1403, 15.2: 0.0003, 15.3: 0.0362, 16: 0.1274,
-                            16.1: 0.0003, 16.3: 0.0418, 17: 0.0604, 17.1: 0.0003, 17.3: 0.1399, 18: 0.0072,
-                            18.3: 0.0594, 19: 0.0003, 19.1: 0.0003, 19.3: 0.0134, 20.3: 0.0013, "pmin": 0.0003},
-                "D2S441": {8: 0.0008, 9: 0.0015, 9.1: 0.0006, 10: 0.2266, 10.1: 0.0003, 10.3: 0.0003, 10.4: 0.0003,
-                           11: 0.3561, 11.3: 0.0552, 12: 0.0423, 12.3: 0.0012, 13: 0.0227, 14: 0.256, 15: 0.0329,
-                           16: 0.0039, "pmin": 0.0003},
-                "D2S1338": {12: 0.0003, 13: 0.0003, 14: 0.0003, 15: 0.0013, 16: 0.0318, 17: 0.1815, 18: 0.0897,
-                            19: 0.1369, 20: 0.1393, 21: 0.034, 22: 0.0277, 23: 0.1003, 24: 0.1119, 25: 0.12, 26: 0.0213,
-                            27: 0.0027, 28: 0.0009, 29: 0.0003, "pmin": 0.0003},
-                "D10S1248": {8: 0.0003, 9: 0.0003, 10: 0.0003, 11: 0.003, 12: 0.0228, 13: 0.2347, 14: 0.3307, 15: 0.231,
-                             16: 0.1394, 17: 0.0354, 18: 0.0022, 19: 0.0003, "pmin": 0.0003},
-                "D12S391": {14: 0.0003, 15: 0.03, 16: 0.0214, 17: 0.1003, 17.3: 0.0117, 18: 0.1996, 18.3: 0.0172,
-                            19: 0.1368, 19.1: 0.0003, 19.2: 0.0003, 19.3: 0.0076, 20: 0.1266, 20.3: 0.0009, 21: 0.1094,
-                            22: 0.1086, 22.3: 0.0003, 23: 0.0813, 24: 0.0333, 25: 0.0115, 26: 0.0028, 27: 0.0007,
-                            "pmin": 0.0003},
-                "D19S433": {6.2: 0.0003, 9: 0.0003, 10: 0.0004, 10.2: 0.0003, 11: 0.0049, 11.2: 0.0003, 12: 0.0847,
-                            12.2: 0.0023, 13: 0.2307, 13.2: 0.0223, 14: 0.3331, 14.2: 0.0295, 15: 0.1562, 15.2: 0.0577,
-                            16: 0.0398, 16.2: 0.0232, 17: 0.0032, 17.2: 0.0067, 18: 0.0003, 18.2: 0.0039, 19.2: 0.0004,
-                            "pmin": 0.0003},
-                "D22S1045": {8: 0.0003, 9: 0.0003, 10: 0.0009, 11: 0.1724, 12: 0.0285, 13: 0.0023, 14: 0.0459,
-                             15: 0.3291, 16: 0.3105, 17: 0.0938, 18: 0.0128, 19: 0.0035, 20: 0.0003, "pmin": 0.0003},
-                "D13S317": {6: 0.0003, 7:  0.0003, 8: 0.1489, 9: 0.0928, 10: 0.0777, 11: 0.3376, 11.1: 0.0003,
-                            12: 0.2224, 13: 0.0839, 14: 0.0352, 15: 0.0012, "pmin": 0.0003},
-                "D5S818": {7: 0.0088, 8: 0.0014, 9: 0.0489, 10: 0.0850, 11: 0.3294, 12: 0.3528, 13: 0.1477, 14: 0.0113,
-                           15: 0.0013, "pmin": 0.0003}}
-    codis_old = ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-                 "TH01", "TPOX", "vWA"]
-    codis_new = ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-                 "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045"]
-    codis_15 = ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-                "TH01", "TPOX", "vWA", "D2S1338", "D19S433"]
-    all_str = ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-               "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045",
-               "PentaE", "PentaD"]
-
     # Create dataframe with offsprings
-    parents_df = pd.read_excel("../ASTR22_main.xlsx")
+    parents_df = pd.read_excel(config["main_table_path"])
     columns_list = parents_df.columns.values.tolist()
     columns_list = columns_list[:-1]
     columns_list.append("Child_ID")
@@ -457,7 +387,7 @@ def main():
                     q_codis_15_trio = []
                     count_of_mismatch_rf = 0
                     if child_counter in inx_mut:
-                        random_str = random.choice(all_str)
+                        random_str = random.choice(config["all_str"])
                         count_of_mismatch_rf += 1
                     for elem in range(1, len(columns_list) - 33, 2):
                         allele = columns_list[elem].split('_')[0]
@@ -484,15 +414,15 @@ def main():
                                                                                                    kid_alleles[0],
                                                                                                    kid_alleles[1])
                         # Choose the dictionary to calculate Q and Q_all:
-                        q_old_trio_ref = calculate_q(codis_old, allele, ref_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                        q_old_trio_ref = calculate_q(config["codis_old"], allele, ref_dict, f_allele_trio,
+                                                     other_allele_trio, knowledge_trio)
                         if q_old_trio_ref:
                             q_old_codis_trio_ref.append(q_old_trio_ref)
-                        q_new_trio_ref = calculate_q(codis_new, allele, ref_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                        q_new_trio_ref = calculate_q(config["codis_new"], allele, ref_dict, f_allele_trio,
+                                                     other_allele_trio, knowledge_trio)
                         if q_new_trio_ref:
                             q_new_codis_trio_ref.append(q_new_trio_ref)
-                        q_trio_15 = calculate_q(codis_15, allele, ref_dict, f_allele_trio, other_allele_trio,
+                        q_trio_15 = calculate_q(config["codis_15"], allele, ref_dict, f_allele_trio, other_allele_trio,
                                                 knowledge_trio)
                         if q_trio_15:
                             q_codis_15_trio.append(q_trio_15)
@@ -500,30 +430,30 @@ def main():
                         f_allele_duo, other_allele_duo, knowledge_duo = duo_freq_father_allele(kid_alleles[0],
                                                                                                kid_alleles[1])
                         # Choose the dictionary to calculate Q and Q_all:
-                        q_old_duo_ref = calculate_q(codis_old, allele, ref_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                        q_old_duo_ref = calculate_q(config["codis_old"], allele, ref_dict, f_allele_duo,
+                                                    other_allele_duo, knowledge_duo)
                         if q_old_duo_ref:
                             q_old_codis_duo_ref.append(q_old_duo_ref)
-                        q_new_duo_ref = calculate_q(codis_new, allele, ref_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                        q_new_duo_ref = calculate_q(config["codis_new"], allele, ref_dict, f_allele_duo,
+                                                    other_allele_duo, knowledge_duo)
                         if q_new_duo_ref:
                             q_new_codis_duo_ref.append(q_new_duo_ref)
                         # Choose the dictionary to calculate Q and Q_all for new ref in trio:
-                        q_old_trio_rus = calculate_q(codis_old, allele, rus_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                        q_old_trio_rus = calculate_q(config["codis_old"], allele, config["rus_dict"], f_allele_trio,
+                                                     other_allele_trio, knowledge_trio)
                         if q_old_trio_rus:
                             q_old_codis_trio_rus.append(q_old_trio_rus)
-                        q_new_trio_rus = calculate_q(codis_new, allele, rus_dict, f_allele_trio, other_allele_trio,
-                                                     knowledge_trio)
+                        q_new_trio_rus = calculate_q(config["codis_new"], allele, config["rus_dict"], f_allele_trio,
+                                                     other_allele_trio, knowledge_trio)
                         if q_new_trio_rus:
                             q_new_codis_trio_rus.append(q_new_trio_rus)
                         # Choose the dictionary to calculate Q and Q_all for new ref in duo:
-                        q_old_duo_rus = calculate_q(codis_old, allele, rus_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                        q_old_duo_rus = calculate_q(config["codis_old"], allele, config["rus_dict"],
+                                                    f_allele_duo, other_allele_duo, knowledge_duo)
                         if q_old_duo_rus:
                             q_old_codis_duo_rus.append(q_old_duo_rus)
-                        q_new_duo_rus = calculate_q(codis_new, allele, rus_dict, f_allele_duo, other_allele_duo,
-                                                    knowledge_duo)
+                        q_new_duo_rus = calculate_q(config["codis_new"], allele, config["rus_dict"], f_allele_duo,
+                                                    other_allele_duo, knowledge_duo)
                         if q_new_duo_rus:
                             q_new_codis_duo_rus.append(q_new_duo_rus)
                     multiplication_old_trio_ref = 1
@@ -578,26 +508,32 @@ def main():
                     kids_df.iloc[k]["number_of_p_fathers_old_CODIS_trio"], ids1 = find_father(index_list, columns_list,
                                                                                               temp_parents_df,
                                                                                               kids_df.loc[[k]], 3, 2,
-                                                                                              codis_old, father, mother)
+                                                                                              config["codis_old"],
+                                                                                              father, mother)
                     kids_df.iloc[k]["number_of_p_fathers_old_CODIS_duo"], ids2 = find_father(index_list, columns_list,
                                                                                              temp_parents_df,
                                                                                              kids_df.loc[[k]], 2, 2,
-                                                                                             codis_old, father, mother)
+                                                                                             config["codis_old"],
+                                                                                             father, mother)
                     kids_df.iloc[k]["number_of_p_fathers_new_CODIS_trio"], ids3 = find_father(index_list, columns_list,
                                                                                               temp_parents_df,
                                                                                               kids_df.loc[[k]], 3, 2,
-                                                                                              codis_new, father, mother)
+                                                                                              config["codis_new"],
+                                                                                              father, mother)
                     kids_df.iloc[k]["number_of_p_fathers_new_CODIS_duo"], ids4 = find_father(index_list, columns_list,
                                                                                              temp_parents_df,
                                                                                              kids_df.loc[[k]], 2, 2,
-                                                                                             codis_new, father, mother)
+                                                                                             config["codis_new"],
+                                                                                             father, mother)
                     for elem in range(len(columns_list) - 32):
                         new_pair_df.iloc[0][columns_list[elem]] = pair_df.iloc[0][columns_list[elem]]
                         new_pair_df.iloc[1][columns_list[elem]] = pair_df.iloc[1][columns_list[elem]]
                     new_pair_df.iloc[0]["Status"] = "real_father"
                     new_pair_df.iloc[1]["Status"] = "real_mother"
-                    new_pair_df.iloc[0]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
-                    new_pair_df.iloc[1]["Child_ID"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
+                    new_pair_df.iloc[0]["Child_ID"] = (pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" +
+                                                       str(k + 1))
+                    new_pair_df.iloc[1]["Child_ID"] = (pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" +
+                                                       str(k + 1))
                     new_pair_df.iloc[1]["number_of_mutations"] = 0
                     offsprings_df = pd.concat([offsprings_df, new_pair_df], ignore_index=True)
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
@@ -616,7 +552,7 @@ def main():
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
-                            if (allele not in ids1[ii]) and (allele in codis_old):
+                            if (allele not in ids1[ii]) and (allele in config["codis_old"]):
                                 m_alleles = [p_pair_df.iloc[1][columns_list[elem]],
                                              p_pair_df.iloc[1][columns_list[elem + 1]]]
                                 kid_alleles = [kids_df.iloc[k][columns_list[elem]],
@@ -625,10 +561,10 @@ def main():
                                 kid_alleles.sort()
                                 f_allele_trio, other_allele_trio, knowledge_trio = \
                                     trio_freq_father_allele(m_alleles[0], m_alleles[1], kid_alleles[0], kid_alleles[1])
-                                q_old_trio_ref = calculate_q(codis_old, allele, ref_dict, f_allele_trio,
+                                q_old_trio_ref = calculate_q(config["codis_old"], allele, ref_dict, f_allele_trio,
                                                              other_allele_trio, knowledge_trio)
-                                q_old_trio_rus = calculate_q(codis_old, allele, rus_dict, f_allele_trio,
-                                                             other_allele_trio, knowledge_trio)
+                                q_old_trio_rus = calculate_q(config["codis_old"], allele, config["rus_dict"],
+                                                             f_allele_trio, other_allele_trio, knowledge_trio)
                                 if q_old_trio_ref:
                                     q_old_codis_trio_ref.append(q_old_trio_ref)
                                 if q_old_trio_rus:
@@ -659,16 +595,16 @@ def main():
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
-                            if (allele not in ids2[ii]) and (allele in codis_old):
+                            if (allele not in ids2[ii]) and (allele in config["codis_old"]):
                                 kid_alleles = [kids_df.iloc[k][columns_list[elem]],
                                                kids_df.iloc[k][columns_list[elem + 1]]]
                                 kid_alleles.sort()
                                 f_allele_duo, other_allele_duo, knowledge_duo = duo_freq_father_allele(kid_alleles[0],
                                                                                                        kid_alleles[1])
-                                q_old_duo_ref = calculate_q(codis_old, allele, ref_dict, f_allele_duo, other_allele_duo,
-                                                            knowledge_duo)
-                                q_old_duo_rus = calculate_q(codis_old, allele, rus_dict, f_allele_duo,
+                                q_old_duo_ref = calculate_q(config["codis_old"], allele, ref_dict, f_allele_duo,
                                                             other_allele_duo, knowledge_duo)
+                                q_old_duo_rus = calculate_q(config["codis_old"], allele, config["rus_dict"],
+                                                            f_allele_duo, other_allele_duo, knowledge_duo)
                                 if q_old_duo_ref:
                                     q_old_codis_duo_ref.append(q_old_duo_ref)
                                 if q_old_duo_rus:
@@ -699,7 +635,7 @@ def main():
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
-                            if (allele not in ids3[ii]) and (allele in codis_new):
+                            if (allele not in ids3[ii]) and (allele in config["codis_new"]):
                                 m_alleles = [p_pair_df.iloc[1][columns_list[elem]],
                                              p_pair_df.iloc[1][columns_list[elem + 1]]]
                                 kid_alleles = [kids_df.iloc[k][columns_list[elem]],
@@ -708,10 +644,10 @@ def main():
                                 kid_alleles.sort()
                                 f_allele_trio, other_allele_trio, knowledge_trio = \
                                     trio_freq_father_allele(m_alleles[0], m_alleles[1], kid_alleles[0], kid_alleles[1])
-                                q_new_trio_ref = calculate_q(codis_new, allele, ref_dict, f_allele_trio,
+                                q_new_trio_ref = calculate_q(config["codis_new"], allele, ref_dict, f_allele_trio,
                                                              other_allele_trio, knowledge_trio)
-                                q_new_trio_rus = calculate_q(codis_new, allele, rus_dict, f_allele_trio,
-                                                             other_allele_trio, knowledge_trio)
+                                q_new_trio_rus = calculate_q(config["codis_new"], allele, config["rus_dict"],
+                                                             f_allele_trio, other_allele_trio, knowledge_trio)
                                 if q_new_trio_ref:
                                     q_new_codis_trio_ref.append(q_new_trio_ref)
                                 if q_new_trio_rus:
@@ -742,16 +678,16 @@ def main():
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
-                            if (allele not in ids4[ii]) and (allele in codis_new):
+                            if (allele not in ids4[ii]) and (allele in config["codis_new"]):
                                 kid_alleles = [kids_df.iloc[k][columns_list[elem]],
                                                kids_df.iloc[k][columns_list[elem + 1]]]
                                 kid_alleles.sort()
                                 f_allele_duo, other_allele_duo, knowledge_duo = duo_freq_father_allele(kid_alleles[0],
                                                                                                        kid_alleles[1])
-                                q_new_duo_ref = calculate_q(codis_new, allele, ref_dict, f_allele_duo,
+                                q_new_duo_ref = calculate_q(config["codis_new"], allele, ref_dict, f_allele_duo,
                                                             other_allele_duo, knowledge_duo)
-                                q_new_duo_rus = calculate_q(codis_new, allele, rus_dict, f_allele_duo,
-                                                            other_allele_duo, knowledge_duo)
+                                q_new_duo_rus = calculate_q(config["codis_new"], allele, config["rus_dict"],
+                                                            f_allele_duo, other_allele_duo, knowledge_duo)
                                 if q_new_duo_ref:
                                     q_new_codis_duo_ref.append(q_new_duo_ref)
                                 if q_new_duo_rus:
@@ -820,63 +756,73 @@ def main():
                         rf.sort()
                         rm.sort()
                         rc.sort()
-                        if el in codis_old:
+                        if el in config["codis_old"]:
                             # check if there is a mutation:
                             lack_of_mut_trio = father_trio(rf[0], rf[1], rm[0], rm[1], rc[0], rc[1])
                             if lack_of_mut_trio:
-                                p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                                p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                 config["rus_dict"], el)
                             else:
-                                p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el,
-                                                              config["mut_rate"])
+                                p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                              config["rus_dict"], el, config["mut_rate"])
                             hyp1_ref_trio_old_f.append(p1)
                             hyp2_ref_trio_old_f.append(p2)
                             hyp1_rus_trio_old_f.append(p3)
                             hyp2_rus_trio_old_f.append(p4)
-                            p1, p2, p3, p4 = hyp_trio_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                            p1, p2, p3, p4 = hyp_trio_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict,
+                                                             config["rus_dict"], el)
                             hyp1_ref_trio_old_m.append(p1)
                             hyp2_ref_trio_old_m.append(p2)
                             hyp1_rus_trio_old_m.append(p3)
                             hyp2_rus_trio_old_m.append(p4)
                             lack_of_mut_duo = father_duo(rf[0], rf[1], rc[0], rc[1])    # check if there is mutation
                             if lack_of_mut_duo:
-                                p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                                p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict,
+                                                                config["rus_dict"], el)
                             else:
-                                p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, config["mut_rate"])
+                                p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
+                                                             config["mut_rate"])
                             hyp1_ref_duo_old_f.append(p1)
                             hyp2_ref_duo_old_f.append(p2)
                             hyp1_rus_duo_old_f.append(p3)
                             hyp2_rus_duo_old_f.append(p4)
-                            p1, p2, p3, p4 = hyp_duo_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                            p1, p2, p3, p4 = hyp_duo_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, config["rus_dict"],
+                                                            el)
                             hyp1_ref_duo_old_m.append(p1)
                             hyp2_ref_duo_old_m.append(p2)
                             hyp1_rus_duo_old_m.append(p3)
                             hyp2_rus_duo_old_m.append(p4)
-                        if el in codis_new:
+                        if el in config["codis_new"]:
                             lack_of_mut_trio = father_trio(rf[0], rf[1], rm[0], rm[1], rc[0], rc[1])
                             if lack_of_mut_trio:
-                                p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                                p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                 config["rus_dict"], el)
                             else:
-                                p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el,
-                                                              config["mut_rate"])
+                                p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                              config["rus_dict"], el, config["mut_rate"])
                             hyp1_ref_trio_new_f.append(p1)
                             hyp2_ref_trio_new_f.append(p2)
                             hyp1_rus_trio_new_f.append(p3)
                             hyp2_rus_trio_new_f.append(p4)
-                            p1, p2, p3, p4 = hyp_trio_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                            p1, p2, p3, p4 = hyp_trio_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict,
+                                                             config["rus_dict"], el)
                             hyp1_ref_trio_new_m.append(p1)
                             hyp2_ref_trio_new_m.append(p2)
                             hyp1_rus_trio_new_m.append(p3)
                             hyp2_rus_trio_new_m.append(p4)
                             lack_of_mut_duo = father_duo(rf[0], rf[1], rc[0], rc[1])  # check if there is mutation
                             if lack_of_mut_duo:
-                                p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                                p1, p2, p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict,
+                                                                config["rus_dict"], el)
                             else:
-                                p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el, config["mut_rate"])
+                                p1, p2, p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
+                                                             config["mut_rate"])
                             hyp1_ref_duo_new_f.append(p1)
                             hyp2_ref_duo_new_f.append(p2)
                             hyp1_rus_duo_new_f.append(p3)
                             hyp2_rus_duo_new_f.append(p4)
-                            p1, p2, p3, p4 = hyp_duo_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict, el)
+                            p1, p2, p3, p4 = hyp_duo_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, config["rus_dict"],
+                                                            el)
                             hyp1_ref_duo_new_m.append(p1)
                             hyp2_ref_duo_new_m.append(p2)
                             hyp1_rus_duo_new_m.append(p3)
@@ -1007,8 +953,9 @@ def main():
                         if ("old" in name) and ("trio" in name):
                             for loc in range(1, len(columns_list) - 33, 2):
                                 el = columns_list[loc].split('_')[0]
-                                if el in codis_old:
-                                    pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                if el in config["codis_old"]:
+                                    pf = [one_pf_df.iloc[0][columns_list[loc]],
+                                          one_pf_df.iloc[0][columns_list[loc + 1]]]
                                     rm = [real_mother_df.iloc[0][columns_list[loc]],
                                           real_mother_df.iloc[0][columns_list[loc + 1]]]
                                     rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
@@ -1018,11 +965,11 @@ def main():
                                     # check if there is a mutation:
                                     lack_of_mut = father_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1])
                                     if lack_of_mut:
-                                        p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                             el)
+                                        p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                             config["rus_dict"], el)
                                     else:
-                                        p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                          el, config["mut_rate"])
+                                        p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                          config["rus_dict"], el, config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
                                     p_hyp2_list_ref.append(p_2)
                                     p_hyp1_list_rus.append(p_3)
@@ -1039,22 +986,25 @@ def main():
                                 multiplication_3 *= m
                             for m in p_hyp2_list_rus:
                                 multiplication_4 *= m
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_old_codis"] = multiplication_3 / multiplication_4
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_old_codis"] = (multiplication_1 /
+                                                                                                multiplication_2)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_old_codis"] = (multiplication_3 /
+                                                                                                multiplication_4)
                         if "old" in name and "duo" in name:
                             for loc in range(1, len(columns_list) - 33, 2):
                                 el = columns_list[loc].split('_')[0]
-                                if el in codis_old:
-                                    pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                if el in config["codis_old"]:
+                                    pf = [one_pf_df.iloc[0][columns_list[loc]],
+                                          one_pf_df.iloc[0][columns_list[loc + 1]]]
                                     rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
                                     pf.sort()
                                     rc.sort()
                                     lack_of_mut = father_duo(pf[0], pf[1], rc[0], rc[1])  # check if there is mutation
                                     if lack_of_mut:
-                                        p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                            el)
+                                        p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict,
+                                                                            config["rus_dict"], el)
                                     else:
-                                        p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el,
+                                        p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
                                                                          config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
                                     p_hyp2_list_ref.append(p_2)
@@ -1072,13 +1022,16 @@ def main():
                                 multiplication_3 *= m
                             for m in p_hyp2_list_rus:
                                 multiplication_4 *= m
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_old_codis"] = multiplication_1 / multiplication_2
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_old_codis"] = multiplication_3 / multiplication_4
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_old_codis"] = (multiplication_1 /
+                                                                                               multiplication_2)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_old_codis"] = (multiplication_3 /
+                                                                                               multiplication_4)
                         if "new" in name and "trio" in name:
                             for loc in range(1, len(columns_list) - 33, 2):
                                 el = columns_list[loc].split('_')[0]
-                                if el in codis_new:
-                                    pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                if el in config["codis_new"]:
+                                    pf = [one_pf_df.iloc[0][columns_list[loc]],
+                                          one_pf_df.iloc[0][columns_list[loc + 1]]]
                                     rm = [real_mother_df.iloc[0][columns_list[loc]],
                                           real_mother_df.iloc[0][columns_list[loc + 1]]]
                                     rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
@@ -1088,11 +1041,11 @@ def main():
                                     # check if there is mutation:
                                     lack_of_mut = father_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1])
                                     if lack_of_mut:
-                                        p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                             el)
+                                        p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                             config["rus_dict"], el)
                                     else:
-                                        p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                          el, config["mut_rate"])
+                                        p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
+                                                                          config["rus_dict"], el, config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
                                     p_hyp2_list_ref.append(p_2)
                                     p_hyp1_list_rus.append(p_3)
@@ -1109,22 +1062,25 @@ def main():
                                 multiplication_3 *= m
                             for m in p_hyp2_list_rus:
                                 multiplication_4 *= m
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_new_codis"] = multiplication_1 / multiplication_2
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_new_codis"] = multiplication_3 / multiplication_4
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_trio_new_codis"] = (multiplication_1 /
+                                                                                                multiplication_2)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_new_codis"] = (multiplication_3 /
+                                                                                                multiplication_4)
                         if "new" in name and "duo" in name:
                             for loc in range(1, len(columns_list) - 33, 2):
                                 el = columns_list[loc].split('_')[0]
-                                if el in codis_new:
-                                    pf = [one_pf_df.iloc[0][columns_list[loc]], one_pf_df.iloc[0][columns_list[loc + 1]]]
+                                if el in config["codis_new"]:
+                                    pf = [one_pf_df.iloc[0][columns_list[loc]],
+                                          one_pf_df.iloc[0][columns_list[loc + 1]]]
                                     rc = [child_df.iloc[0][columns_list[loc]], child_df.iloc[0][columns_list[loc + 1]]]
                                     pf.sort()
                                     rc.sort()
                                     lack_of_mut = father_duo(pf[0], pf[1], rc[0], rc[1])  # check if there is mutation
                                     if lack_of_mut:
-                                        p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict, rus_dict,
-                                                                            el)
+                                        p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict,
+                                                                            config["rus_dict"], el)
                                     else:
-                                        p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, rus_dict, el,
+                                        p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
                                                                          config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
                                     p_hyp2_list_ref.append(p_2)
@@ -1142,8 +1098,10 @@ def main():
                                 multiplication_3 *= m
                             for m in p_hyp2_list_rus:
                                 multiplication_4 *= m
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_new_codis"] = multiplication_1 / multiplication_2
-                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_new_codis"] = multiplication_3 / multiplication_4
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_duo_new_codis"] = (multiplication_1 /
+                                                                                               multiplication_2)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_new_codis"] = (multiplication_3 /
+                                                                                               multiplication_4)
                 n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=True)
