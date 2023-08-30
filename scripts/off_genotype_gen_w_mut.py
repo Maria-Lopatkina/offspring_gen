@@ -993,7 +993,6 @@ def main():
                     for m in hyp2_rus_duo_new_m:
                         multiplication_32 *= m
                     offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
-                    offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_old_codis"] = multiplication_1 / multiplication_2
                     offsprings_df.iloc[inx_lr[0]]["LR_rus_trio_old_codis"] = multiplication_3 / multiplication_4
                     offsprings_df.iloc[inx_lr[0]]["LR_ref_trio_new_codis"] = multiplication_5 / multiplication_6
                     offsprings_df.iloc[inx_lr[0]]["LR_rus_trio_new_codis"] = multiplication_7 / multiplication_8
