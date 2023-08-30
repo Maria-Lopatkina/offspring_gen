@@ -42,16 +42,28 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
     return d
 
 
-def inx_mutation(n_p, k, m_r):
-    count = 0
-    list_of_mut = []
+def inx_mutation(n_p, k, m_r, one, two, three):
+    one_stp = []
+    two_stp = []
+    three_stp = []
+    list_of_all_mut = []
     mutation = int(n_p * m_r * k * 22)
-    for m in range(mutation):
+    for m in range(round(mutation * one)):
         a = random.choice(range(n_p * k))
-        if a not in list_of_mut:
-            list_of_mut.append(a)
-            count += 1
-    return list_of_mut
+        if a not in list_of_all_mut:
+            if a not in one_stp:
+                one_stp.append(a)
+    for m in range(round(mutation * two)):
+        a = random.choice(range(n_p * k))
+        if a not in list_of_all_mut:
+            if a not in two_stp:
+                two_stp.append(a)
+    for m in range(round(mutation * three)):
+        a = random.choice(range(n_p * k))
+        if a not in list_of_all_mut:
+            if a not in three_stp:
+                three_stp.append(a)
+    return one_stp, two_stp, three_stp
 
 
 def father_trio(f1, f2, m1, m2, k1, k2):
@@ -306,6 +318,39 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
     return p1, p2
 
 
+def count_step_trio(f1, f2, m1, m2, k1, k2):
+    if k1 == m1 and k2 == m2:
+        d = []
+        for i in f1, f2:
+            for j in k1, k2:
+                d.append(abs(i - j))
+        d.sort()
+        if d[0] == 1:
+            return 1
+        else:
+            return 0
+    else:
+        for i in m1, m2:
+            for j in k1, k2:
+                if i == j:
+                    if i == k2:
+                        f_all = k1
+                    else:
+                        f_all = k2
+                    for f in f1, f2:
+                        if abs(f - f_all) == 1:
+                            return 1
+                        else:
+                            return 0
+
+
+def count_step_duo(f1, f2, k1, k2):
+    for i in f1, f2:
+        for j in k1, k2:
+            if abs(i - j) == 1:
+                return 1
+    return 0
+
 def main():
     start = time.time()
     with open("config_file.yaml", "r") as yaml_file:
@@ -341,6 +386,7 @@ def main():
     columns_list.append("number_of_p_fathers_new_CODIS_trio")
     columns_list.append("number_of_p_fathers_new_CODIS_duo")
     columns_list.append("number_of_mutations")
+    columns_list.append("step_mutation")
     # Add columns for LR calculations (for real parents)
     columns_list.append("LR_ref_trio_old_codis")
     columns_list.append("LR_rus_trio_old_codis")
@@ -360,7 +406,9 @@ def main():
         list_for_pairs = []
         child_counter = 0
         # Get the indexes of kids with mutation:
-        inx_mut = inx_mutation(config["number_of_pairs"], config["kids"], config["mut_rate"])
+        inx_mut_1, inx_mut_2, inx_mut_3 = inx_mutation(config["number_of_pairs"], config["kids"], config["mut_rate"],
+                                                       config["one_step"], config["two_step"], config["three_step"])
+        step_f = 0
         n = copy.deepcopy(config["number_of_pairs"])
         while n != 0:
             father = random.choice(index_list)
@@ -373,7 +421,8 @@ def main():
                 kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
                 for k in range(config["kids"]):
                     kids_df.iloc[k]["Status"] = "kid"
-                    kids_df.iloc[k]["№"] = pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" + str(k + 1)
+                    kids_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-" +
+                                            str(k + 1))
                     # offsprings_df = pd.concat([offsprings_df, pair_df])  # parents data in output
                     random_str = None
                     q_old_codis_trio_ref = []
@@ -386,19 +435,34 @@ def main():
                     q_new_codis_duo_rus = []
                     q_codis_15_trio = []
                     count_of_mismatch_rf = 0
-                    if child_counter in inx_mut:
+                    if (child_counter in inx_mut_1) or (child_counter in inx_mut_2) or (child_counter in inx_mut_3):
                         random_str = random.choice(config["all_str"])
                         count_of_mismatch_rf += 1
-                    for elem in range(1, len(columns_list) - 33, 2):
+                    for elem in range(1, len(columns_list) - 34, 2):
                         allele = columns_list[elem].split('_')[0]
                         f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                         f_allele_random = random.choice(f_alleles)
-                        if allele == random_str:
-                            a = random.choice([-1, 1])
-                            if a == -1:
+                        if (allele == random_str) and (child_counter in inx_mut_1):
+                            a = random.choice([0, 1])
+                            if a == 0:
                                 f_allele_random -= 1
                             else:
                                 f_allele_random += 1
+                            step_f = 1
+                        if (allele == random_str) and (child_counter in inx_mut_2):
+                            a = random.choice([0, 1])
+                            if a == 0:
+                                f_allele_random -= 2
+                            else:
+                                f_allele_random += 2
+                            step_f = 2
+                        if (allele == random_str) and (child_counter in inx_mut_3):
+                            a = random.choice([0, 1])
+                            if a == 0:
+                                f_allele_random -= 3
+                            else:
+                                f_allele_random += 3
+                            step_f = 3
                         m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
                         m_allele_random = random.choice(m_alleles)
                         possible_alleles = [f_allele_random, m_allele_random]
@@ -501,6 +565,10 @@ def main():
                     new_pair_df.iloc[0]["PP_new_CODIS_duo_rus"] = 1 / (1 + multiplication_new_duo_rus)
                     new_pair_df.iloc[0]["PI_CODIS_15_trio"] = 1 / multiplication_15_trio
                     new_pair_df.iloc[0]["number_of_mutations"] = count_of_mismatch_rf
+                    if step_f != 0:
+                        new_pair_df.iloc[0]["step_mutation"] = step_f
+                    else:
+                        new_pair_df.iloc[0]["step_mutation"] = "-"
                     kids_df.iloc[k]["population"] = pair_df.iloc[0]["population"]
                     kids_df.iloc[k]["Child_ID"] = kids_df.iloc[k]["№"]
                     kids_df.iloc[k]["number_of_mutations"] = "-"
@@ -525,15 +593,15 @@ def main():
                                                                                              kids_df.loc[[k]], 2, 2,
                                                                                              config["codis_new"],
                                                                                              father, mother)
-                    for elem in range(len(columns_list) - 32):
+                    for elem in range(len(columns_list) - 33):
                         new_pair_df.iloc[0][columns_list[elem]] = pair_df.iloc[0][columns_list[elem]]
                         new_pair_df.iloc[1][columns_list[elem]] = pair_df.iloc[1][columns_list[elem]]
                     new_pair_df.iloc[0]["Status"] = "real_father"
                     new_pair_df.iloc[1]["Status"] = "real_mother"
-                    new_pair_df.iloc[0]["Child_ID"] = (pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" +
-                                                       str(k + 1))
-                    new_pair_df.iloc[1]["Child_ID"] = (pair_df.iloc[0]['№'] + "-" + pair_df.iloc[1]['№'] + "-" +
-                                                       str(k + 1))
+                    new_pair_df.iloc[0]["Child_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) +
+                                                       "-" + str(k + 1))
+                    new_pair_df.iloc[1]["Child_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) +
+                                                       "-" + str(k + 1))
                     new_pair_df.iloc[1]["number_of_mutations"] = 0
                     offsprings_df = pd.concat([offsprings_df, new_pair_df], ignore_index=True)
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
@@ -548,7 +616,7 @@ def main():
                         pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_old_codis_trio"
                         q_old_codis_trio_ref = []
                         q_old_codis_trio_rus = []
-                        for elem in range(1, len(columns_list) - 33, 2):
+                        for elem in range(1, len(columns_list) - 34, 2):
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -591,7 +659,7 @@ def main():
                         pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_old_codis_duo"
                         q_old_codis_duo_ref = []
                         q_old_codis_duo_rus = []
-                        for elem in range(1, len(columns_list) - 33, 2):
+                        for elem in range(1, len(columns_list) - 34, 2):
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -631,7 +699,7 @@ def main():
                         pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_new_codis_trio"
                         q_new_codis_trio_ref = []
                         q_new_codis_trio_rus = []
-                        for elem in range(1, len(columns_list) - 33, 2):
+                        for elem in range(1, len(columns_list) - 34, 2):
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -674,7 +742,7 @@ def main():
                         pot_father_df.iloc[0]["№"] = temp_parents_df.loc[ii]["№"] + "_new_codis_duo"
                         q_new_codis_duo_ref = []
                         q_new_codis_duo_rus = []
-                        for elem in range(1, len(columns_list) - 33, 2):
+                        for elem in range(1, len(columns_list) - 34, 2):
                             allele = columns_list[elem].split('_')[0]
                             pot_father_df.iloc[0][columns_list[elem]] = p_pair_df.iloc[0][columns_list[elem]]
                             pot_father_df.iloc[0][columns_list[elem + 1]] = p_pair_df.iloc[0][columns_list[elem + 1]]
@@ -748,7 +816,7 @@ def main():
                     hyp2_ref_duo_new_m = []
                     hyp1_rus_duo_new_m = []
                     hyp2_rus_duo_new_m = []
-                    for loc in range(1, len(columns_list) - 33, 2):
+                    for loc in range(1, len(columns_list) - 34, 2):
                         el = columns_list[loc].split('_')[0]
                         rf = [real_father_df.iloc[0][columns_list[loc]], real_father_df.iloc[0][columns_list[loc + 1]]]
                         rm = [real_mother_df.iloc[0][columns_list[loc]], real_mother_df.iloc[0][columns_list[loc + 1]]]
@@ -763,6 +831,7 @@ def main():
                                 p1, p2, p3, p4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                                  config["rus_dict"], el)
                             else:
+
                                 p1, p2, p3, p4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                               config["rus_dict"], el, config["mut_rate"])
                             hyp1_ref_trio_old_f.append(p1)
@@ -948,10 +1017,11 @@ def main():
                         p_hyp2_list_ref = []
                         p_hyp1_list_rus = []
                         p_hyp2_list_rus = []
+                        steps = []
                         one_pf_df = offsprings_df.iloc[[df_for_lr.index[ii]]]  # df with one PF data
                         name = one_pf_df.iloc[0]['№'].split("_")
                         if ("old" in name) and ("trio" in name):
-                            for loc in range(1, len(columns_list) - 33, 2):
+                            for loc in range(1, len(columns_list) - 34, 2):
                                 el = columns_list[loc].split('_')[0]
                                 if el in config["codis_old"]:
                                     pf = [one_pf_df.iloc[0][columns_list[loc]],
@@ -968,6 +1038,7 @@ def main():
                                         p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                                              config["rus_dict"], el)
                                     else:
+                                        steps.append(count_step_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1]))
                                         p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                                           config["rus_dict"], el, config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
@@ -990,8 +1061,9 @@ def main():
                                                                                                 multiplication_2)
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_old_codis"] = (multiplication_3 /
                                                                                                 multiplication_4)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["step_mutation"] = steps
                         if "old" in name and "duo" in name:
-                            for loc in range(1, len(columns_list) - 33, 2):
+                            for loc in range(1, len(columns_list) - 34, 2):
                                 el = columns_list[loc].split('_')[0]
                                 if el in config["codis_old"]:
                                     pf = [one_pf_df.iloc[0][columns_list[loc]],
@@ -1004,6 +1076,7 @@ def main():
                                         p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict,
                                                                             config["rus_dict"], el)
                                     else:
+                                        steps.append(count_step_duo(pf[0], pf[1], rc[0], rc[1]))
                                         p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
                                                                          config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
@@ -1026,8 +1099,9 @@ def main():
                                                                                                multiplication_2)
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_old_codis"] = (multiplication_3 /
                                                                                                multiplication_4)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["step_mutation"] = steps
                         if "new" in name and "trio" in name:
-                            for loc in range(1, len(columns_list) - 33, 2):
+                            for loc in range(1, len(columns_list) - 34, 2):
                                 el = columns_list[loc].split('_')[0]
                                 if el in config["codis_new"]:
                                     pf = [one_pf_df.iloc[0][columns_list[loc]],
@@ -1044,6 +1118,7 @@ def main():
                                         p_1, p_2, p_3, p_4 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                                              config["rus_dict"], el)
                                     else:
+                                        steps.append(count_step_trio(pf[0], pf[1], rm[0], rm[1], rc[0], rc[1]))
                                         p_1, p_2, p_3, p_4 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict,
                                                                           config["rus_dict"], el, config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
@@ -1066,8 +1141,9 @@ def main():
                                                                                                 multiplication_2)
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_trio_new_codis"] = (multiplication_3 /
                                                                                                 multiplication_4)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["step_mutation"] = steps
                         if "new" in name and "duo" in name:
-                            for loc in range(1, len(columns_list) - 33, 2):
+                            for loc in range(1, len(columns_list) - 34, 2):
                                 el = columns_list[loc].split('_')[0]
                                 if el in config["codis_new"]:
                                     pf = [one_pf_df.iloc[0][columns_list[loc]],
@@ -1080,6 +1156,7 @@ def main():
                                         p_1, p_2, p_3, p_4 = hyp_duo_wo_mut(pf[0], pf[1], rc[0], rc[1], ref_dict,
                                                                             config["rus_dict"], el)
                                     else:
+                                        steps.append(count_step_duo(pf[0], pf[1], rc[0], rc[1]))
                                         p_1, p_2, p_3, p_4 = hyp_duo_mut(rc[0], rc[1], ref_dict, config["rus_dict"], el,
                                                                          config["mut_rate"])
                                     p_hyp1_list_ref.append(p_1)
@@ -1102,6 +1179,7 @@ def main():
                                                                                                multiplication_2)
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_duo_new_codis"] = (multiplication_3 /
                                                                                                multiplication_4)
+                            offsprings_df.iloc[df_for_lr.index[ii]]["step_mutation"] = steps
                 n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=True)
