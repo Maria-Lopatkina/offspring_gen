@@ -1,35 +1,52 @@
 # Enter the absolute path to the main file with SNP analysis data
-main_table_path: "/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR22_main.xlsx"
+main_table_path: "/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR_G26_AVAR_189.xlsx"
 
 # Enter the number of pairs
-number_of_pairs: 50
+number_of_pairs: 10
 
 # Enter the number of offsprings
 kids: 3
 
 # Enter the list of population names
 # ex. "якуты" or "тувинцы"
-populations: ["тувинцы"]
+populations: ["аварцы"]
 
 # Enter the frequency of STR-locus mutation
 mut_rate: 0.0045
+
+# Enter the rate of one-step mutations:
+one_step: 0.94
+
+# Enter the rate of two-step mutations:
+two_step: 0.05
+
+# Enter the rate of three-step mutations:
+three_step: 0.01
 
 # Enter the names of loci from old CODIS:
 codis_old: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
             "TH01", "TPOX", "vWA"]
 
 # Enter the names of loci from new CODIS:
-codis_new: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-            "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045"]
+codis_new: ["D3S1358", "TH01", "D12S391", "D5S818", "TPOX", "D2S441", "D7S820", "D13S317", "FGA", "D22S1045", "D18S51",
+           "D16S539", "D8S1179", "CSF1PO", "vWA", "D21S11", "SE33", "D10S1248", "D1S1656", "D19S433", "D2S1338"]
+
+#codis_new: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
+#            "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045"]
 
 # Enter the names of 15 loci from Chinese article:
 codis_15: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
            "TH01", "TPOX", "vWA", "D2S1338", "D19S433"]
 
 # Enter the names of all loci from ASTR22:
-all_str: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
-          "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045",
-          "PentaE", "PentaD"]
+all_str: ["D3S1358", "TH01", "D12S391", "D5S818", "TPOX", "D2S441", "D7S820", "D13S317", "FGA", "D22S1045", "D18S51",
+          "D16S539", "D8S1179", "CSF1PO", "D6S1043", "vWA", "D21S11", "SE33", "D10S1248", "D1S1656", "D19S433",
+          "D2S1338"]
+
+#all_str: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
+#          "TH01", "TPOX", "vWA", "D1S1656", "D2S441", "D2S1338", "D10S1248", "D12S391", "D19S433", "D22S1045",
+#          "PentaE", "PentaD"]
+
 
 # Enter the name of new set of loci from ASTR_G26:
 new_plex: ["D3S1358", "TH01", "D12S391", "D5S818", "TPOX", "D2S441", "D7S820", "D13S317", "FGA", "D22S1045", "D18S51",
