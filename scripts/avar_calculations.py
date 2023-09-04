@@ -147,33 +147,33 @@ def duo_freq_father_allele(k1, k2):
         return f_all, other_all, kn
 
 
-def calculate_q(str_list, allele_name, dict, f_a, o_a, know):
+def calculate_q(str_list, allele_name, dic, f_a, o_a, know):
     q = None
     if allele_name in str_list:
         if know:
-            if f_a in dict[allele_name]:
-                q = dict[allele_name][f_a] * (2 - dict[allele_name][f_a])
+            if f_a in dic[allele_name]:
+                q = dic[allele_name][f_a] * (2 - dic[allele_name][f_a])
             else:
-                q = dict[allele_name]["pmin"] * (2 - dict[allele_name]["pmin"])
+                q = dic[allele_name]["pmin"] * (2 - dic[allele_name]["pmin"])
         else:
-            if f_a in dict[allele_name] and o_a in dict[allele_name]:
-                q = (dict[allele_name][f_a] + dict[allele_name][o_a]) * (2 - (dict[allele_name][f_a] +
-                                                                              dict[allele_name][o_a]))
-            elif f_a not in dict[allele_name] and o_a in dict[allele_name]:
-                q = (dict[allele_name]["pmin"] + dict[allele_name][o_a]) * (2 - (dict[allele_name]["pmin"]
-                                                                                 + dict[allele_name][o_a]))
-            elif f_a in dict[allele_name] and o_a not in dict[allele_name]:
-                q = (dict[allele_name][f_a] + dict[allele_name]["pmin"]) * (2 - (dict[allele_name][f_a] +
-                                                                                 dict[allele_name]["pmin"]))
-            elif f_a not in dict[allele_name] and o_a not in dict[allele_name]:
-                q = (dict[allele_name]["pmin"] + dict[allele_name]["pmin"]) * \
-                    (2 - (dict[allele_name]["pmin"] + dict[allele_name]["pmin"]))
+            if f_a in dic[allele_name] and o_a in dic[allele_name]:
+                q = (dic[allele_name][f_a] + dic[allele_name][o_a]) * (2 - (dic[allele_name][f_a] +
+                                                                            dic[allele_name][o_a]))
+            elif f_a not in dic[allele_name] and o_a in dic[allele_name]:
+                q = (dic[allele_name]["pmin"] + dic[allele_name][o_a]) * (2 - (dic[allele_name]["pmin"]
+                                                                               + dic[allele_name][o_a]))
+            elif f_a in dic[allele_name] and o_a not in dic[allele_name]:
+                q = (dic[allele_name][f_a] + dic[allele_name]["pmin"]) * (2 - (dic[allele_name][f_a] +
+                                                                               dic[allele_name]["pmin"]))
+            elif f_a not in dic[allele_name] and o_a not in dic[allele_name]:
+                q = (dic[allele_name]["pmin"] + dic[allele_name]["pmin"]) * \
+                    (2 - (dic[allele_name]["pmin"] + dic[allele_name]["pmin"]))
         return q
     else:
         return None
 
-# functions for LR calculation
 
+# functions for LR calculation
 def hyp_trio_wo_mut(m1, m2, k1, k2, our_dict, str_elem):
     #  1 and 2 - for our data, 3 and 4 - for rus
     p1 = 1
@@ -244,16 +244,16 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
         if k1 == f1 and k2 == f2:
             if k1 in dic[allele] and k2 in dic[allele]:
                 p1 = (dic[allele][k1] + dic[allele][k2]) * (2 - (dic[allele][k1] + dic[allele][k2]))
-                p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele][k2] * (2 - dic[allele][k2]) - \
-                     (2 * dic[allele][k1] * dic[allele][k2]) ** 2
+                p2 = (2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele][k2] * (2 - dic[allele][k2]) -
+                      (2 * dic[allele][k1] * dic[allele][k2]) ** 2)
             elif k1 not in dic[allele] and k2 in dic[allele]:
                 p1 = (dic[allele]["pmin"] + dic[allele][k2]) * (2 - (dic[allele]["pmin"] + dic[allele][k2]))
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][k2] * (2 - dic[allele][k2]) - \
-                     (2 * dic[allele]["pmin"] * dic[allele][k2]) ** 2
+                p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][k2] * (2 - dic[allele][k2]) -
+                      (2 * dic[allele]["pmin"] * dic[allele][k2]) ** 2)
             elif k1 in dic[allele] and k2 not in dic[allele]:
                 p1 = (dic[allele][k1] + dic[allele]["pmin"]) * (2 - (dic[allele][k1] + dic[allele]["pmin"]))
-                p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
+                p2 = (2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
+                      (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2)
             elif k1 not in dic[allele] and k2 not in dic[allele]:
                 p1 = (dic[allele]["pmin"] + dic[allele]["pmin"]) * (2 - (dic[allele]["pmin"] + dic[allele]["pmin"]))
                 p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] *
@@ -297,20 +297,20 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
     else:
         if k1 in dic[allele] and k2 in dic[allele]:
             p1 = (dic[allele][k1] + dic[allele][k2]) * (2 - (dic[allele][k1] + dic[allele][k2])) * mut
-            p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele][k2] * (2 - dic[allele][k2]) - \
-                 (2 * dic[allele][k1] * dic[allele][k2]) ** 2
+            p2 = (2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele][k2] * (2 - dic[allele][k2]) -
+                  (2 * dic[allele][k1] * dic[allele][k2]) ** 2)
         elif k1 not in dic[allele] and k2 in dic[allele]:
             p1 = (dic[allele]["pmin"] + dic[allele][k2]) * (2 - (dic[allele]["pmin"] + dic[allele][k2])) * mut
-            p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][k2] * (2 - dic[allele][k2]) - \
-                 (2 * dic[allele]["pmin"] * dic[allele][k2]) ** 2
+            p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][k2] * (2 - dic[allele][k2]) -
+                  (2 * dic[allele]["pmin"] * dic[allele][k2]) ** 2)
         elif k1 in dic[allele] and k2 not in dic[allele]:
             p1 = (dic[allele][k1] + dic[allele]["pmin"]) * (2 - (dic[allele][k1] + dic[allele]["pmin"])) * mut
-            p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                 (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
+            p2 = (2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
+                  (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2)
         elif k1 not in dic[allele] and k2 not in dic[allele]:
             p1 = (dic[allele]["pmin"] + dic[allele]["pmin"]) * (2 - (dic[allele]["pmin"] + dic[allele]["pmin"])) * mut
-            p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) \
-                 - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
+            p2 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
+                  - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2)
     return p1, p2
 
 
@@ -346,6 +346,7 @@ def count_step_duo(f1, f2, k1, k2):
             if abs(i - j) == 1:
                 return 1
     return 0
+
 
 def main():
     start = time.time()
@@ -388,7 +389,8 @@ def main():
     for pop in config["populations"]:
         ref_dict = empty_freq_table(config["main_table_path"])
         ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
-        new_pair_df = pd.DataFrame(columns=columns_list, index = [0, 1])
+        print(ref_dict)
+        new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
         list_for_pairs = []
@@ -416,6 +418,7 @@ def main():
                     q_combined_duo = []
                     for elem in range(1, len(columns_list) - 28, 2):
                         allele = columns_list[elem].split('_')[0]
+                        print("allele", allele)
                         f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                         f_allele_random = random.choice(f_alleles)
                         m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
@@ -436,14 +439,17 @@ def main():
                         # Choose the dictionary to calculate Q and Q_all:
                         q_codis_trio = calculate_q(config["codis_new"], allele, ref_dict, f_allele_trio,
                                                    other_allele_trio, knowledge_trio)
+                        print("new", q_codis_trio)
                         if q_codis_trio:
                             q_new_codis_trio.append(q_codis_trio)
                         q_plex_trio = calculate_q(config["new_plex"], allele, ref_dict, f_allele_trio,
                                                   other_allele_trio, knowledge_trio)
+                        print(q_plex_trio)
                         if q_plex_trio:
                             q_new_plex_trio.append(q_plex_trio)
                         q_comb_trio = calculate_q(config["combined"], allele, ref_dict, f_allele_trio,
-                                                      other_allele_trio, knowledge_trio)
+                                                  other_allele_trio, knowledge_trio)
+                        print(q_comb_trio)
                         if q_comb_trio:
                             q_combined_trio.append(q_comb_trio)
 
@@ -451,16 +457,19 @@ def main():
                         f_allele_duo, other_allele_duo, knowledge_duo = duo_freq_father_allele(kid_alleles[0],
                                                                                                kid_alleles[1])
                         # Choose the dictionary to calculate Q and Q_all:
-                        q_codis_duo = calculate_q(config["codis_new"], allele, ref_dict, f_allele_duo,
-                                                  other_allele_duo, knowledge_duo)
+                        q_codis_duo = calculate_q(config["codis_new"], allele, ref_dict, f_allele_duo, other_allele_duo,
+                                                  knowledge_duo)
+                        print(q_codis_duo)
                         if q_codis_duo:
                             q_new_codis_duo.append(q_codis_duo)
-                        q_plex_duo = calculate_q(config["new_plex"], allele, ref_dict, f_allele_duo,
-                                                 other_allele_duo, knowledge_duo)
+                        q_plex_duo = calculate_q(config["new_plex"], allele, ref_dict, f_allele_duo, other_allele_duo,
+                                                 knowledge_duo)
+                        print(q_plex_duo)
                         if q_plex_duo:
                             q_new_plex_duo.append(q_plex_duo)
-                        q_comb_duo = calculate_q(config["combined"], allele, ref_dict, f_allele_duo,
-                                                 other_allele_duo, knowledge_duo)
+                        q_comb_duo = calculate_q(config["combined"], allele, ref_dict, f_allele_duo, other_allele_duo,
+                                                 knowledge_duo)
+                        print(q_comb_duo)
                         if q_comb_duo:
                             q_combined_duo.append(q_comb_duo)
                     multiplication_new_codis_trio = 1
@@ -835,8 +844,6 @@ def main():
                     offsprings_df.iloc[inx_lr[0]]["LR_new_plex_duo"] = multiplication_9 / multiplication_10
                     offsprings_df.iloc[inx_lr[0]]["LR_combined_duo"] = multiplication_11 / multiplication_12
 
-
-                    #################################################
                     # CALCULATE LR FOR FALSE POSITIVE FATHERS
                     for ii in range(3, len(df_for_lr.index)):
                         p_hyp1 = []
@@ -871,7 +878,7 @@ def main():
                             for m in p_hyp2:
                                 multiplication_2 *= m
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_new_codis_trio"] = (multiplication_1 /
-                                                                                                multiplication_2)
+                                                                                            multiplication_2)
                         if "codis" in name and "duo" in name:
                             for loc in range(1, len(columns_list) - 28, 2):
                                 el = columns_list[loc].split('_')[0]
@@ -895,7 +902,7 @@ def main():
                             for m in p_hyp2:
                                 multiplication_2 *= m
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_new_codis_duo"] = (multiplication_1 /
-                                                                                               multiplication_2)
+                                                                                           multiplication_2)
                         if "plex" in name and "trio" in name:
                             for loc in range(1, len(columns_list) - 28, 2):
                                 el = columns_list[loc].split('_')[0]
@@ -948,7 +955,7 @@ def main():
                             for m in p_hyp2:
                                 multiplication_2 *= m
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_new_plex_duo"] = (multiplication_1 /
-                                                                                               multiplication_2)
+                                                                                          multiplication_2)
                         if "combined" in name and "trio" in name:
                             for loc in range(1, len(columns_list) - 28, 2):
                                 el = columns_list[loc].split('_')[0]
@@ -1003,7 +1010,6 @@ def main():
                             offsprings_df.iloc[df_for_lr.index[ii]]["LR_combined_duo"] = (multiplication_1 /
                                                                                           multiplication_2)
                 n -= 1
-                print(n)
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=True)
     print(round(time.time() - start, 2), 's')

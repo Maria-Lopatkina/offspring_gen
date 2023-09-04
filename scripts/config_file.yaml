@@ -1,11 +1,11 @@
 # Enter the absolute path to the main file with SNP analysis data
-main_table_path: "/media/maria/_home1/projects/PyCharm/2023_GIL/offspring_gen/ASTR_AVAR.xlsx"
+main_table_path: "~/projects/PyCharm/GIL/offspring_gen/ASTR_AVAR.xlsx"
 
 # Enter the number of pairs
-number_of_pairs: 334
+number_of_pairs: 1
 
 # Enter the number of offsprings
-kids: 3
+kids: 1
 
 # Enter the list of population names
 # ex. "якуты" or "тувинцы"
@@ -16,7 +16,7 @@ mut_rate: 0.0045
 
 # Enter the name of new set of loci from ASTR_AVAR:
 codis_new: ["D3S1358", "TH01", "D12S391", "D5S818", "TPOX", "D13S317", "FGA", "D22S1045", "D18S51", "D16S539",
-           "D8S1179", "CSF1PO", "D6S1043", "vWA", "D21S11", "SE33", "D10S1248", "D1S1656", "D19S433", "D2S1338"]
+           "D8S1179", "CSF1PO", "vWA", "D21S11", "SE33", "D10S1248", "D1S1656", "D19S433", "D2S1338"]
 
 new_plex: ["D20S1082", "D6S474", "D12ATA63", "D4S2666", "D1S1677", "D11S4463", "D9S1122", "D2S1776", "D10S1435",
            "D3S3053", "D5S2500", "D1S1627", "D3S4529", "D2S1360", "D17S974", "D3S1744", "D9S2157", "D17S1301",
@@ -27,8 +27,8 @@ combined: ["D3S1358", "TH01", "D12S391", "D5S818", "TPOX", "D13S317", "FGA", "D2
            "D20S1082", "D6S474", "D12ATA63", "D4S2666", "D1S1677", "D11S4463", "D9S1122", "D2S1776", "D10S1435",
            "D3S3053", "D5S2500", "D1S1627", "D3S4529", "D2S1360", "D17S974", "D3S1744", "D9S2157", "D17S1301",
            "D8S1132", "Penta-D", "D21S2050", "D7S1517", "Penta-E"]
-#
-#
+
+# Delete "D6S1043" from codis_new
 #
 ## Enter the dictionary with frequencies from manual:
 #rus_dict: {"CSF1PO": {7: 0.0004, 8: 0.0012, 9: 0.0438, 10: 0.2824, 11: 0.2882, 12: 0.3062, 13: 0.0617, 14: 0.0127,
