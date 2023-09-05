@@ -91,7 +91,7 @@ def find_father(i_list, c_list, t_df, k_df, family, n_of_mis, codis, father_ind,
             mismatch = []
             pot_father_df = t_df.loc[[i]]
             real_mother_df = t_df.loc[[mother_ind]]
-            for loc in range(1, len(c_list) - 26, 2):
+            for loc in range(1, len(c_list) - 27, 2):
                 el = c_list[loc].split('_')[0]
                 if el in codis:
                     pf1, pf2 = pot_father_df.iloc[0][c_list[loc]], \
@@ -314,40 +314,6 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
     return p1, p2
 
 
-def count_step_trio(f1, f2, m1, m2, k1, k2):
-    if k1 == m1 and k2 == m2:
-        d = []
-        for i in f1, f2:
-            for j in k1, k2:
-                d.append(abs(i - j))
-        d.sort()
-        if d[0] == 1:
-            return 1
-        else:
-            return 0
-    else:
-        for i in m1, m2:
-            for j in k1, k2:
-                if i == j:
-                    if i == k2:
-                        f_all = k1
-                    else:
-                        f_all = k2
-                    for f in f1, f2:
-                        if abs(f - f_all) == 1:
-                            return 1
-                        else:
-                            return 0
-
-
-def count_step_duo(f1, f2, k1, k2):
-    for i in f1, f2:
-        for j in k1, k2:
-            if abs(i - j) == 1:
-                return 1
-    return 0
-
-
 def main():
     start = time.time()
     with open("config_file.yaml", "r") as yaml_file:
@@ -389,7 +355,6 @@ def main():
     for pop in config["populations"]:
         ref_dict = empty_freq_table(config["main_table_path"])
         ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
-        print(ref_dict)
         new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
@@ -418,7 +383,6 @@ def main():
                     q_combined_duo = []
                     for elem in range(1, len(columns_list) - 28, 2):
                         allele = columns_list[elem].split('_')[0]
-                        print("allele", allele)
                         f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                         f_allele_random = random.choice(f_alleles)
                         m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
@@ -439,17 +403,14 @@ def main():
                         # Choose the dictionary to calculate Q and Q_all:
                         q_codis_trio = calculate_q(config["codis_new"], allele, ref_dict, f_allele_trio,
                                                    other_allele_trio, knowledge_trio)
-                        print("new", q_codis_trio)
                         if q_codis_trio:
                             q_new_codis_trio.append(q_codis_trio)
                         q_plex_trio = calculate_q(config["new_plex"], allele, ref_dict, f_allele_trio,
                                                   other_allele_trio, knowledge_trio)
-                        print(q_plex_trio)
                         if q_plex_trio:
                             q_new_plex_trio.append(q_plex_trio)
                         q_comb_trio = calculate_q(config["combined"], allele, ref_dict, f_allele_trio,
                                                   other_allele_trio, knowledge_trio)
-                        print(q_comb_trio)
                         if q_comb_trio:
                             q_combined_trio.append(q_comb_trio)
 
@@ -459,17 +420,14 @@ def main():
                         # Choose the dictionary to calculate Q and Q_all:
                         q_codis_duo = calculate_q(config["codis_new"], allele, ref_dict, f_allele_duo, other_allele_duo,
                                                   knowledge_duo)
-                        print(q_codis_duo)
                         if q_codis_duo:
                             q_new_codis_duo.append(q_codis_duo)
                         q_plex_duo = calculate_q(config["new_plex"], allele, ref_dict, f_allele_duo, other_allele_duo,
                                                  knowledge_duo)
-                        print(q_plex_duo)
                         if q_plex_duo:
                             q_new_plex_duo.append(q_plex_duo)
                         q_comb_duo = calculate_q(config["combined"], allele, ref_dict, f_allele_duo, other_allele_duo,
                                                  knowledge_duo)
-                        print(q_comb_duo)
                         if q_comb_duo:
                             q_combined_duo.append(q_comb_duo)
                     multiplication_new_codis_trio = 1
@@ -770,37 +728,32 @@ def main():
                         rf.sort()
                         rm.sort()
                         rc.sort()
+                        # check if there is a mutation:
+                        lack_of_mut_trio = father_trio(rf[0], rf[1], rm[0], rm[1], rc[0], rc[1])
+                        if lack_of_mut_trio:
+                            p1, p2 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el)
+                        else:
+                            p1, p2 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el, config["mut_rate"])
+                        lack_of_mut_duo = father_duo(rf[0], rf[1], rc[0], rc[1])  # check if there is mutation
+                        if lack_of_mut_duo:
+                            p3, p4 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, el)
+                        else:
+                            p3, p4 = hyp_duo_mut(rc[0], rc[1], ref_dict, el, config["mut_rate"])
                         if el in config["codis_new"]:
-                            # check if there is a mutation:
-                            lack_of_mut_trio = father_trio(rf[0], rf[1], rm[0], rm[1], rc[0], rc[1])
-                            if lack_of_mut_trio:
-                                p1, p2 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el)
-                            else:
-                                p1, p2 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el, config["mut_rate"])
                             hyp1_new_codis_trio.append(p1)
                             hyp2_new_codis_trio.append(p2)
-                            lack_of_mut_duo = father_duo(rf[0], rf[1], rc[0], rc[1])    # check if there is mutation
-                            if lack_of_mut_duo:
-                                p1, p2 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, el)
-                            else:
-                                p1, p2 = hyp_duo_mut(rc[0], rc[1], ref_dict, el, config["mut_rate"])
-                            hyp1_new_codis_duo.append(p1)
-                            hyp2_new_codis_duo.append(p2)
+                            hyp1_new_codis_duo.append(p3)
+                            hyp2_new_codis_duo.append(p4)
                         if el in config["new_plex"]:
-                            lack_of_mut_trio = father_trio(rf[0], rf[1], rm[0], rm[1], rc[0], rc[1])
-                            if lack_of_mut_trio:
-                                p1, p2 = hyp_trio_wo_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el)
-                            else:
-                                p1, p2 = hyp_trio_mut(rm[0], rm[1], rc[0], rc[1], ref_dict, el, config["mut_rate"])
                             hyp1_new_plex_trio.append(p1)
                             hyp2_new_plex_trio.append(p2)
-                            lack_of_mut_duo = father_duo(rf[0], rf[1], rc[0], rc[1])  # check if there is mutation
-                            if lack_of_mut_duo:
-                                p1, p2 = hyp_duo_wo_mut(rf[0], rf[1], rc[0], rc[1], ref_dict, el)
-                            else:
-                                p1, p2 = hyp_duo_mut(rc[0], rc[1], ref_dict, el, config["mut_rate"])
-                            hyp1_new_plex_duo.append(p1)
-                            hyp2_new_plex_duo.append(p2)
+                            hyp1_new_plex_duo.append(p3)
+                            hyp2_new_plex_duo.append(p4)
+                        if el in config["combined"]:
+                            hyp1_combined_trio.append(p1)
+                            hyp2_combined_trio.append(p2)
+                            hyp1_combined_duo.append(p3)
+                            hyp2_combined_duo.append(p4)
                     multiplication_1 = 1
                     multiplication_2 = 1
                     multiplication_3 = 1
