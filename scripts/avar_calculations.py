@@ -316,7 +316,7 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
 
 def main():
     start = time.time()
-    with open("config_file.yaml", "r") as yaml_file:
+    with open("config_file_avar.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
     parents_df = pd.read_excel(config["main_table_path"])
@@ -964,7 +964,7 @@ def main():
                                                                                           multiplication_2)
                 n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
-    offsprings_df.to_excel("NEW_output.xlsx", index=True)
+    offsprings_df.to_excel("AVAR_U_output.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
