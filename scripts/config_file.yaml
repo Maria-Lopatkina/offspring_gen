@@ -1,0 +1,12 @@
+# Enter the number of pairs
+number_of_pairs: 3
+
+# Enter the number of offsprings
+kids: 3
+
+# Enter the list of population names
+# ex. "якуты" or "тувинцы"
+populations: ["якуты", "тувинцы"]
+
+# Enter the frequency of STR-locus mutation
+mut_rate: 0.0045
