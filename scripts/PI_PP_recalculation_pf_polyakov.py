@@ -172,8 +172,6 @@ def p_calc_duo_mut(f1, f2, k1, k2, dic, allele, mut):
                 return equations(k1, None, 6, dic, allele)
 
 
-
-
 def main():
     start = time.time()
     mut_freq = float(input("Enter the frequency of STR-locus mutation: "))

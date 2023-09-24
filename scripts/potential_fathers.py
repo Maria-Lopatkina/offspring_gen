@@ -1,3 +1,9 @@
+"""
+Script for calculation of the number of potential parents. User needs 2 files with trios data and false positive
+fathers data.
+"""
+
+
 import pandas as pd
 import time
 
@@ -58,9 +64,6 @@ def main():
                             if not answer:
                                 count_of_mismatches += 1
                     print(count_of_mismatches)
-                    # one_pf_df.iloc[0]["p_father_PP_rus"] = count_of_mismatches
-                    # print(one_pf_df)
-                    # p_f_output_df = pd.concat([p_f_output_df, one_pf_df])
                 if "new" in name and "trio" in name:
                     for loc in range(1, len(columns_list) - 27, 2):
                         el = columns_list[loc].split('_')[0]

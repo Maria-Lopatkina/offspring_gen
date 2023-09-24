@@ -1,3 +1,9 @@
+"""
+Script for likelihood ratio (LR) calculation. User needs the file with main table ("ASTR_main.xlsx"), and 2 files with
+trios data and false positive fathers data. Also, there is a need to set the mutation rate.
+"""
+
+
 import pandas as pd
 import time
 
@@ -9,7 +15,7 @@ def empty_freq_table():    # Create empty dictionaries for allele frequencies
     for el in range(1, len(f_columns) - 2, 2):
         key_dict.append(list(f_columns[el].split("_"))[0])
     freq_dict = dict.fromkeys(key_dict)
-    return freq_dict    #
+    return freq_dict
 
 
 def calculate_frequencies(p, d):    # Calculate alleles frequencies for three populations
@@ -137,8 +143,8 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
                      (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
             elif k1 not in dic[allele] and k2 not in dic[allele]:
                 p1 = (dic[allele]["pmin"] + dic[allele]["pmin"]) * (2 - (dic[allele]["pmin"] + dic[allele]["pmin"]))
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) \
-                     - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
+                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * \
+                     (2 - dic[allele]["pmin"]) - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
         else:
             for i in k1, k2:
                 for j in f1, f2:
@@ -161,8 +167,8 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
                 p2 = 2 * dic[allele][k1] * (2 - dic[allele][k1]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      (2 * dic[allele][k1] * dic[allele]["pmin"]) ** 2
             elif k1 not in dic[allele] and k2 not in dic[allele]:
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) \
-                     - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
+                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * \
+                     (2 - dic[allele]["pmin"]) - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2
     return p1, p2
 
 
