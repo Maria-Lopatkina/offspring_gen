@@ -1,3 +1,10 @@
+"""
+Script for PI, PP recalculation for false positive fathers. It should be used if the table with new population is
+already generated.
+User needs the file with main table ("ASTR_main.xlsx"), and 2 files with trios data and false positive fathers data.
+"""
+
+
 import pandas as pd
 import time
 
@@ -74,11 +81,11 @@ def trio_freq_father_allele(m1, m2, k1, k2):
 
 def duo_freq_father_allele(k1, k2):
     other_all = None
-    if k1 == k2:    # Child is homozygote
+    if k1 == k2:    # Child is homozygous
         f_all = k1
         kn = True
         return f_all, other_all, kn
-    elif k1 != k2:    # Child is heterozygote
+    elif k1 != k2:    # Child is heterozygous
         f_all = k1
         other_all = k2
         kn = False
