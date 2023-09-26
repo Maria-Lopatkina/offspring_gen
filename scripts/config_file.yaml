@@ -1,5 +1,5 @@
 # Enter the absolute path to the main file with SNP analysis data
-main_table_path: "~/projects/PyCharm/GIL/offspring_gen/ASTR22_main.xlsx"
+main_table_path: "~/projects/PyCharm/GIL/offspring_gen/ASTR_AVAR.xlsx"
 
 # Enter the number of pairs
 number_of_pairs: 334
@@ -9,7 +9,7 @@ kids: 3
 
 # Enter the list of population names
 # ex. "якуты" or "тувинцы"
-populations: ["русские", "цезы", "тувинцы", "якуты", "андийцы", "гинухцы"]
+populations: ["аварцы"]
 
 # Enter the frequency of STR-locus mutation
 mut_rate: 0.0045
