@@ -39,10 +39,12 @@ def calculate_frequencies(d, path):  # Calculate alleles frequencies
 
 
 def main():
+    start = time.time()
     with open("config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     ref_dict = empty_freq_table(config["main_table_path"])
     ref_dict = calculate_frequencies(ref_dict, config["main_table_path"])
+    print(ref_dict)
     n_parents = 2000
     temp_df = pd.read_excel(config["main_table_path"])
     columns_list = temp_df.columns.values.tolist()
@@ -58,14 +60,13 @@ def main():
             s += ref_dict[el][i]
         if s != n_parents * 2:
             while s != n_parents * 2:
-                # s must be equal to n_parents * 2
-
-
-
-
-    print(ref_dict)
-    print(parents_df)
-    ##########################
+                ii = random.randint(0, len(ref_dict[el]) - 1)
+                if n_parents * 2 - s > 0:
+                    ref_dict[el][list(ref_dict[el].keys())[ii]] += 1
+                    s += 1
+                else:
+                    ref_dict[el][list(ref_dict[el].keys())[ii]] -= 1
+                    s -= 1
     for el in ref_dict.keys():
         loc = []
         elem_1 = el + "_1"
@@ -79,8 +80,8 @@ def main():
             loc.pop()
             parents_df.iloc[k][elem_2] = loc[-1]
             loc.pop()
-        print(el)
-    print(parents_df)
+    parents_df.to_excel("parents_gen_table.xlsx", index=True)
+    print(round(time.time() - start, 2), 's')
 
 
 if __name__ == "__main__":

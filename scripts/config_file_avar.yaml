@@ -1,8 +1,8 @@
 # Enter the absolute path to the main file with SNP analysis data
-main_table_path: "~/projects/PyCharm/GIL/offspring_gen/ASTR_AVAR_U.xlsx"
+main_table_path: "~/projects/PyCharm/GIL/offspring_gen/parents_gen_table.xlsx"
 
 # Enter the number of pairs
-number_of_pairs: 334
+number_of_pairs: 3
 
 # Enter the number of offsprings
 kids: 3
