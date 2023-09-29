@@ -2,7 +2,7 @@
 main_table_path: "~/projects/PyCharm/GIL/offspring_gen/parents_gen_table.xlsx"
 
 # Enter the number of pairs
-number_of_pairs: 3
+number_of_pairs: 334
 
 # Enter the number of offsprings
 kids: 3

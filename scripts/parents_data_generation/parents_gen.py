@@ -40,7 +40,7 @@ def calculate_frequencies(d, path):  # Calculate alleles frequencies
 
 def main():
     start = time.time()
-    with open("config_file.yaml", "r") as yaml_file:
+    with open("../config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     ref_dict = empty_freq_table(config["main_table_path"])
     ref_dict = calculate_frequencies(ref_dict, config["main_table_path"])
@@ -80,7 +80,7 @@ def main():
             loc.pop()
             parents_df.iloc[k][elem_2] = loc[-1]
             loc.pop()
-    parents_df.to_excel("parents_gen_table.xlsx", index=True)
+    parents_df.to_excel("parents_gen_table_RUS.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
