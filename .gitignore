@@ -1,6 +1,6 @@
 # Ignore all pdf files with reference frequencies and input excel files
 *.pdf
-*.xlsx
+*_input.xlsx
 
 # Ignore idea folder
 .idea/
