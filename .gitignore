@@ -1,5 +1,5 @@
 # Ignore all pdf files with reference frequencies and input excel files
-./guidelines/*.pdf
+*.pdf
 *.xlsx
 
 # Ignore idea folder
