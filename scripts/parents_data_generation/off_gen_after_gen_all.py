@@ -5,7 +5,7 @@ import time
 import yaml
 
 
-def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
+def empty_freq_table(path):  # Create empty dictionaries for calculation of allele frequencies
     freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
     key_dict = []
@@ -1077,7 +1077,7 @@ def main():
                             offsprings_df.iloc[df_for_lr.index[ii]]["step_mutation"] = steps
                 n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
-    offsprings_df.to_excel("output_gen_gen_RUS.xlsx", index=True)
+    offsprings_df.to_excel("output_gen_gen_TESTTEST.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 

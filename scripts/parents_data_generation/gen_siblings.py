@@ -5,6 +5,8 @@ import time
 import yaml
 
 
+# Generate and count the LR for
+
 def empty_freq_table(path):  # Create empty dictionaries for calculation of allele frequencies
     freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
@@ -461,7 +463,7 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
 
 def main():
     start = time.time()
-    with open("./config_file_siblings.yaml", "r") as yaml_file:
+    with open("../config_file_siblings.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
     parents_df = pd.read_excel(config["main_table_path"])
@@ -479,6 +481,8 @@ def main():
     for pop in config["populations"]:
         ref_dict = empty_freq_table(config["main_table_path"])
         ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
+        print(ref_dict)
+        print(config["rus_dict"])
         new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
@@ -655,7 +659,7 @@ def main():
                 offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_old_codis"] = multiplication_3 / multiplication_4
                 offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_new_codis"] = multiplication_5 / multiplication_6
                 offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_new_codis"] = multiplication_7 / multiplication_8
-    offsprings_df.to_excel("SIBLINGS_OUTPUT_TEST.xlsx", index=True)
+    offsprings_df.to_excel("SIBLINGS_OUTPUT_200.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 

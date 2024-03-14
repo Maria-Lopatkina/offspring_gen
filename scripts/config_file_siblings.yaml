@@ -2,14 +2,20 @@
 main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/inputAll.xlsx"
 
 # Enter the number of pairs
-number_of_pairs: 10
+number_of_pairs: 200
 
 # Enter the number of offsprings
-kids: 3
+kids: 20
+
+# Enter the number of potential siblings with mutations
+sibl_mut: 20
+
+# Enter the number of nonsiblings
+nonsibling: 20
 
 # Enter the list of population names
-# ex. "якуты" or "тувинцы"        "андийцы", "тувинцы", "цезы", "якуты", "гинухцы"
-populations: ["андийцы", "тувинцы", "цезы", "якуты", "гинухцы"]
+# ex. "якуты" or "тувинцы"
+populations: ["якуты"]
 
 # Enter the frequency of STR-locus mutation
 mut_rate: 0.0045

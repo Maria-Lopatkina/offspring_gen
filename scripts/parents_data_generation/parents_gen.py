@@ -80,7 +80,7 @@ def main():
             loc.pop()
             parents_df.iloc[k][elem_2] = loc[-1]
             loc.pop()
-    parents_df.to_excel("parents_gen_table_RUS.xlsx", index=True)
+    parents_df.to_excel("parents_gen_table_GIN.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
