@@ -5,6 +5,8 @@ import time
 import yaml
 
 
+# Generate and count the LR for
+
 def empty_freq_table(path):  # Create empty dictionaries for calculation of allele frequencies
     freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
@@ -45,12 +47,7 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
 # functions for LR calculation
 def hyp_sibl(s1, s2, k1, k2, our_dict, rus_dict, str_elem):
     #  1 - for our frequencies, 2 - for rus
-    print()
-    print(str_elem, ":")
-    print("k1=", k1, "k2=", k2, "s1=", s1, "s2=", s2)
-    print("p1, p2:")
     p1, p2 = calculate_p(s1, s2, k1, k2, our_dict, str_elem)
-    print("p3, p4:")
     p3, p4 = calculate_p(s1, s2, k1, k2, rus_dict, str_elem)
     return p1, p2, p3, p4
 
@@ -65,7 +62,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
             else:
                 p1 = 1
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("s1 == s2 and s1 == k1", allele, p1, p2)
         elif k1 == s1 or k1 == s2:
             if k1 == s1:
                 a = s1
@@ -97,7 +93,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                      (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
                       2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("k1 == s1 or k1 == s2", allele, p1, p2)
         elif s1 == s2 and k1 != s1:
             a = k1
             b = s1
@@ -117,7 +112,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                 p1 = (2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
                      (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("s1 == s2 and k1 != s1", allele, p1, p2)
         elif k1 != s1 and k1 != s2 and s1 != s2:
             a = k1
             b = s1
@@ -162,7 +156,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                      (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
                       2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("k1 != s1 and k1 != s2 and s1 != s2", allele, p1, p2)
     else:
         if s1 == s2 and (s1 == k1 or s1 == k2):
             a = s1
@@ -195,7 +188,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                      (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("s1 == s2 and (s1 == k1 or s1 == k2)", allele, p1, p2)
         if k1 == s1 and k2 == s2:
             a = k1
             b = k2
@@ -215,7 +207,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                 p1 = 1
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("k1 == s1 and k2 == s2", allele, p1, p2)
         if s1 != s2 and (k1 == s1 and k2 != s2 or k1 == s2 and k2 != s1 or k1 != s1 and k2 == s2 or k1 != s2 and k2 == s1):
             a = None
             b = None
@@ -292,7 +283,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                       2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("s1 != s2 and (k1 == s1 and k2 != k2 or k1 == s2 and k2 != s1 or k1 != s1 and k2 == s2 or k1 != s2 and k2 == s1)", allele, p1, p2)
         if s1 == s2 and k1 != s1 and k2 != s1:
             a = k1
             b = k2
@@ -337,7 +327,6 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                      (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("s1 == s2 and k1 != s1 and k2 != s1", allele, p1, p2)
         if s1 != s2 and k1 != s1 and k1 != s2 and k2 != s1 and k2 != s2:
             a = k1
             b = k2
@@ -455,13 +444,12 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                       2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("s1 != s2 and k1 != s1 and k1 != s2 and k2 != s1 and k2 != s2", allele, p1, p2)
     return p1, p2
 
 
 def main():
     start = time.time()
-    with open("./config_file_siblings.yaml", "r") as yaml_file:
+    with open("../config_file_siblings_v2.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
     parents_df = pd.read_excel(config["main_table_path"])
@@ -469,13 +457,7 @@ def main():
     columns_list = columns_list[:-1]
     columns_list.append("Family_ID")
     columns_list.append("Status")
-    # Add columns for LR calculations (for potential brothers and sisters)
-    columns_list.append("LR_ref_old_codis")
-    columns_list.append("LR_rus_old_codis")
-    columns_list.append("LR_ref_new_codis")
-    columns_list.append("LR_rus_new_codis")
-
-    offsprings_df = pd.DataFrame(columns=columns_list)
+    offsprings_df = pd.DataFrame(columns=columns_list)    # Create main df
     for pop in config["populations"]:
         ref_dict = empty_freq_table(config["main_table_path"])
         ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
@@ -494,15 +476,12 @@ def main():
             if pair not in list_for_pairs and father != mother:
                 list_for_pairs.append(pair)
                 pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
-                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"] + 1)])
-                for k in range(config["kids"] + 1):
-                    if k != 0:
-                        kids_df.iloc[k]["Status"] = "real_sibling"
-                    else:
-                        kids_df.iloc[k]["Status"] = "kid"
+                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
+                for k in range(config["kids"]):
+                    kids_df.iloc[k]["Status"] = "kid"
                     kids_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-" +
                                             str(k + 1))
-                    for elem in range(1, len(columns_list) - 7, 2):
+                    for elem in range(1, len(columns_list) - 3, 2):
                         f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
                         f_allele_random = random.choice(f_alleles)
                         m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
@@ -515,7 +494,7 @@ def main():
                         f_alleles.sort()
                         m_alleles.sort()
                     if k == 0:
-                        for elem in range(len(columns_list) - 6):
+                        for elem in range(len(columns_list) - 2):
                             new_pair_df.iloc[0][columns_list[elem]] = pair_df.iloc[0][columns_list[elem]]
                             new_pair_df.iloc[1][columns_list[elem]] = pair_df.iloc[1][columns_list[elem]]
                         new_pair_df.iloc[0]["Status"] = "real_father"
@@ -526,73 +505,24 @@ def main():
                     kids_df.iloc[k]["Family_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']))
                     kids_df.iloc[k]["population"] = pop
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
-
-                # Add data for potential siblings with mutation:
-                siblings_mut_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["sibl_mut"])])
-                for k in range(config["sibl_mut"]):
-                    siblings_mut_df.iloc[k]["Status"] = "sibling_with_mutation"
-                    siblings_mut_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-"
-                                                    + str(config["kids"] + k + 2))
-                    rand_n = 0
-                    randstr = []
-                    while rand_n != 7:
-                        rand = random.randint(1, len(columns_list) - 7)
-                        if rand % 2 == 1 and rand not in randstr:
-                            randstr.append(rand)
-                            rand_n += 1
-                    for elem in range(1, len(columns_list) - 7, 2):
-                        f_alleles = [pair_df.iloc[0][columns_list[elem]], pair_df.iloc[0][columns_list[elem + 1]]]
-                        f_allele_random = random.choice(f_alleles)
-                        m_alleles = [pair_df.iloc[1][columns_list[elem]], pair_df.iloc[1][columns_list[elem + 1]]]
-                        m_allele_random = random.choice(m_alleles)
-                        possible_alleles = [f_allele_random, m_allele_random]
-                        kid_alleles = random.sample(possible_alleles, 2)
-                        kid_alleles.sort()
-                        if elem in randstr:
-                            a = random.choice([0, 1])
-                            if a == 0:
-                                siblings_mut_df.iloc[k][columns_list[elem]] = kid_alleles[0] - 1
-                                siblings_mut_df.iloc[k][columns_list[elem + 1]] = kid_alleles[1] + 1
-                            elif a == 1:
-                                siblings_mut_df.iloc[k][columns_list[elem]] = kid_alleles[0]
-                                siblings_mut_df.iloc[k][columns_list[elem + 1]] = kid_alleles[1] + 1
-                        else:
-                            siblings_mut_df.iloc[k][columns_list[elem]] = kid_alleles[0]
-                            siblings_mut_df.iloc[k][columns_list[elem + 1]] = kid_alleles[1]
-                        f_alleles.sort()
-                        m_alleles.sort()
-                    siblings_mut_df.iloc[k]["Family_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']))
-                    siblings_mut_df.iloc[k]["population"] = pop
-                    offsprings_df = pd.concat([offsprings_df, siblings_mut_df.loc[[k]]], ignore_index=True)
-
-                # Add data for nonsiblings:
-                nonsiblings_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["nonsibling"])])
-                for k in range(config["nonsibling"]):
-                    nonsiblings_df.iloc[k]["Status"] = "nonsibling"
-                    nonsiblings_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-"
-                                                   + str(config["kids"] + config["sibl_mut"] + k + 2))
-                    for elem in range(1, len(columns_list) - 7, 2):
-                        f_alleles = [pair_df.iloc[0][columns_list[elem]] + 1, pair_df.iloc[0][columns_list[elem + 1]] + 1]
-                        f_allele_random = random.choice(f_alleles)
-                        m_alleles = [pair_df.iloc[1][columns_list[elem]] + 1, pair_df.iloc[1][columns_list[elem + 1]] + 1]
-                        m_allele_random = random.choice(m_alleles)
-                        possible_alleles = [f_allele_random, m_allele_random]
-                        kid_alleles = random.sample(possible_alleles, 2)
-                        kid_alleles.sort()
-                        nonsiblings_df.iloc[k][columns_list[elem]] = kid_alleles[0]
-                        nonsiblings_df.iloc[k][columns_list[elem + 1]] = kid_alleles[1]
-                        f_alleles.sort()
-                        m_alleles.sort()
-                    nonsiblings_df.iloc[k]["Family_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']))
-                    nonsiblings_df.iloc[k]["population"] = pop
-                    offsprings_df = pd.concat([offsprings_df, nonsiblings_df.loc[[k]]], ignore_index=True)
             n -= 1
+        offsprings_df.to_excel("generated_families.xlsx", index=False)
 
-            #######################
-            # Count LR
-            df_for_lr = offsprings_df.loc[(offsprings_df['Family_ID'] == new_pair_df.iloc[0]["Family_ID"])]
-            proband_df = df_for_lr.iloc[[2]]  # df with 1st, 2nd or 3rd child's data
-            for ii in range(3, len(df_for_lr.index)):
+        ######################
+        # Count LR
+        lr_all_kids_df = offsprings_df.loc[(offsprings_df['Status'] == "kid")]
+        rows_list = lr_all_kids_df['№'].tolist()
+        lr_old_codis_ref_df = pd.DataFrame(columns=rows_list, index=rows_list)
+        lr_new_codis_ref_df = pd.DataFrame(columns=rows_list, index=rows_list)
+        lr_old_codis_rus_df = pd.DataFrame(columns=rows_list, index=rows_list)
+        lr_new_codis_rus_df = pd.DataFrame(columns=rows_list, index=rows_list)
+        lr_index_list = lr_all_kids_df.index.values.tolist()    # 2, 3, 6, 7
+        count_el = 0
+        for el in lr_index_list:
+            prob_df = lr_all_kids_df.loc[[el]]
+            print(prob_df)
+            count_k = 0
+            for kk in lr_index_list:
                 hyp1_ref_old = []
                 hyp2_ref_old = []
                 hyp1_rus_old = []
@@ -601,10 +531,11 @@ def main():
                 hyp2_ref_new = []
                 hyp1_rus_new = []
                 hyp2_rus_new = []
-                sibl_df = df_for_lr.iloc[[ii]]
-                for loc in range(1, len(columns_list) - 7, 2):
+                sibl_df = lr_all_kids_df.loc[[kk]]
+                print(sibl_df)
+                for loc in range(1, len(columns_list) - 3, 2):
                     el = columns_list[loc].split('_')[0]
-                    kid = [proband_df.iloc[0][columns_list[loc]], proband_df.iloc[0][columns_list[loc + 1]]]
+                    kid = [prob_df.iloc[0][columns_list[loc]], prob_df.iloc[0][columns_list[loc + 1]]]
                     sibl = [sibl_df.iloc[0][columns_list[loc]], sibl_df.iloc[0][columns_list[loc + 1]]]
                     kid.sort()
                     sibl.sort()
@@ -619,14 +550,6 @@ def main():
                         hyp2_ref_new.append(p2)
                         hyp1_rus_new.append(p3)
                         hyp2_rus_new.append(p4)
-                print(hyp1_ref_old)
-                print(hyp2_ref_old)
-                print(hyp1_rus_old)
-                print(hyp1_rus_old)
-                print(hyp1_ref_new)
-                print(hyp2_ref_new)
-                print(hyp1_rus_new)
-                print(hyp1_rus_new)
                 multiplication_1 = 1
                 multiplication_2 = 1
                 multiplication_3 = 1
@@ -651,11 +574,20 @@ def main():
                     multiplication_7 *= m
                 for m in hyp2_rus_new:
                     multiplication_8 *= m
-                offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_old_codis"] = multiplication_1 / multiplication_2
-                offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_old_codis"] = multiplication_3 / multiplication_4
-                offsprings_df.iloc[df_for_lr.index[ii]]["LR_ref_new_codis"] = multiplication_5 / multiplication_6
-                offsprings_df.iloc[df_for_lr.index[ii]]["LR_rus_new_codis"] = multiplication_7 / multiplication_8
-    offsprings_df.to_excel("SIBLINGS_OUTPUT_TEST.xlsx", index=True)
+                print(multiplication_1 / multiplication_2)
+                print(multiplication_3 / multiplication_4)
+                print(multiplication_5 / multiplication_6)
+                print(multiplication_7 / multiplication_8)
+                lr_old_codis_ref_df.iat[count_el, count_k] = multiplication_1 / multiplication_2
+                lr_new_codis_ref_df.iat[count_el, count_k] = multiplication_3 / multiplication_4
+                lr_old_codis_rus_df.iat[count_el, count_k] = multiplication_5 / multiplication_6
+                lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
+                count_k += 1
+            count_el += 1
+        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df.xlsx", index=True)
+        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df.xlsx", index=True)
+        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df.xlsx", index=True)
+        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 

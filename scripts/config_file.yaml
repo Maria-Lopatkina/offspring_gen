@@ -9,7 +9,7 @@ kids: 3
 
 # Enter the list of population names
 # ex. "якуты" or "тувинцы"        "андийцы", "тувинцы", "цезы", "якуты", "гинухцы"
-populations: ["андийцы", "тувинцы", "цезы", "якуты", "гинухцы"]
+populations: ["русские"]
 
 # Enter the frequency of STR-locus mutation
 mut_rate: 0.0045
