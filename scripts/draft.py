@@ -464,8 +464,8 @@ def main():
         new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
-        index_list_f = index_list[:1000]
-        index_list_m = index_list[1000:]
+        index_list_f = index_list[:2000]
+        index_list_m = index_list[2000:]
         list_for_pairs = []
         n = copy.deepcopy(config["number_of_pairs"])
         while n != 0:
@@ -520,68 +520,63 @@ def main():
         count_el = 0
         for el in lr_index_list:
             prob_df = lr_all_kids_df.loc[[el]]
-            print(prob_df)
             count_k = 0
             for kk in lr_index_list:
-                hyp1_ref_old = []
-                hyp2_ref_old = []
-                hyp1_rus_old = []
-                hyp2_rus_old = []
-                hyp1_ref_new = []
-                hyp2_ref_new = []
-                hyp1_rus_new = []
-                hyp2_rus_new = []
-                sibl_df = lr_all_kids_df.loc[[kk]]
-                print(sibl_df)
-                for loc in range(1, len(columns_list) - 3, 2):
-                    el = columns_list[loc].split('_')[0]
-                    kid = [prob_df.iloc[0][columns_list[loc]], prob_df.iloc[0][columns_list[loc + 1]]]
-                    sibl = [sibl_df.iloc[0][columns_list[loc]], sibl_df.iloc[0][columns_list[loc + 1]]]
-                    kid.sort()
-                    sibl.sort()
-                    p1, p2, p3, p4 = hyp_sibl(sibl[0], sibl[1], kid[0], kid[1], ref_dict, config["rus_dict"], el)
-                    if el in config["codis_old"]:
-                        hyp1_ref_old.append(p1)
-                        hyp2_ref_old.append(p2)
-                        hyp1_rus_old.append(p3)
-                        hyp2_rus_old.append(p4)
-                    if el in config["codis_new"]:
-                        hyp1_ref_new.append(p1)
-                        hyp2_ref_new.append(p2)
-                        hyp1_rus_new.append(p3)
-                        hyp2_rus_new.append(p4)
-                multiplication_1 = 1
-                multiplication_2 = 1
-                multiplication_3 = 1
-                multiplication_4 = 1
-                multiplication_5 = 1
-                multiplication_6 = 1
-                multiplication_7 = 1
-                multiplication_8 = 1
-                for m in hyp1_ref_old:
-                    multiplication_1 *= m
-                for m in hyp2_ref_old:
-                    multiplication_2 *= m
-                for m in hyp1_rus_old:
-                    multiplication_3 *= m
-                for m in hyp2_rus_old:
-                    multiplication_4 *= m
-                for m in hyp1_ref_new:
-                    multiplication_5 *= m
-                for m in hyp2_ref_new:
-                    multiplication_6 *= m
-                for m in hyp1_rus_new:
-                    multiplication_7 *= m
-                for m in hyp2_rus_new:
-                    multiplication_8 *= m
-                print(multiplication_1 / multiplication_2)
-                print(multiplication_3 / multiplication_4)
-                print(multiplication_5 / multiplication_6)
-                print(multiplication_7 / multiplication_8)
-                lr_old_codis_ref_df.iat[count_el, count_k] = multiplication_1 / multiplication_2
-                lr_new_codis_ref_df.iat[count_el, count_k] = multiplication_3 / multiplication_4
-                lr_old_codis_rus_df.iat[count_el, count_k] = multiplication_5 / multiplication_6
-                lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
+                if count_el != count_k:
+                    hyp1_ref_old = []
+                    hyp2_ref_old = []
+                    hyp1_rus_old = []
+                    hyp2_rus_old = []
+                    hyp1_ref_new = []
+                    hyp2_ref_new = []
+                    hyp1_rus_new = []
+                    hyp2_rus_new = []
+                    sibl_df = lr_all_kids_df.loc[[kk]]
+                    for loc in range(1, len(columns_list) - 3, 2):
+                        el = columns_list[loc].split('_')[0]
+                        kid = [prob_df.iloc[0][columns_list[loc]], prob_df.iloc[0][columns_list[loc + 1]]]
+                        sibl = [sibl_df.iloc[0][columns_list[loc]], sibl_df.iloc[0][columns_list[loc + 1]]]
+                        kid.sort()
+                        sibl.sort()
+                        p1, p2, p3, p4 = hyp_sibl(sibl[0], sibl[1], kid[0], kid[1], ref_dict, config["rus_dict"], el)
+                        if el in config["codis_old"]:
+                            hyp1_ref_old.append(p1)
+                            hyp2_ref_old.append(p2)
+                            hyp1_rus_old.append(p3)
+                            hyp2_rus_old.append(p4)
+                        if el in config["codis_new"]:
+                            hyp1_ref_new.append(p1)
+                            hyp2_ref_new.append(p2)
+                            hyp1_rus_new.append(p3)
+                            hyp2_rus_new.append(p4)
+                    multiplication_1 = 1
+                    multiplication_2 = 1
+                    multiplication_3 = 1
+                    multiplication_4 = 1
+                    multiplication_5 = 1
+                    multiplication_6 = 1
+                    multiplication_7 = 1
+                    multiplication_8 = 1
+                    for m in hyp1_ref_old:
+                        multiplication_1 *= m
+                    for m in hyp2_ref_old:
+                        multiplication_2 *= m
+                    for m in hyp1_rus_old:
+                        multiplication_3 *= m
+                    for m in hyp2_rus_old:
+                        multiplication_4 *= m
+                    for m in hyp1_ref_new:
+                        multiplication_5 *= m
+                    for m in hyp2_ref_new:
+                        multiplication_6 *= m
+                    for m in hyp1_rus_new:
+                        multiplication_7 *= m
+                    for m in hyp2_rus_new:
+                        multiplication_8 *= m
+                    lr_old_codis_ref_df.iat[count_el, count_k] = multiplication_1 / multiplication_2
+                    lr_new_codis_ref_df.iat[count_el, count_k] = multiplication_3 / multiplication_4
+                    lr_old_codis_rus_df.iat[count_el, count_k] = multiplication_5 / multiplication_6
+                    lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
                 count_k += 1
             count_el += 1
         lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df.xlsx", index=True)

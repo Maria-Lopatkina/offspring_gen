@@ -449,7 +449,7 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
 
 def main():
     start = time.time()
-    with open("../config_file_siblings_v2.yaml", "r") as yaml_file:
+    with open("../config_file_siblings.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
     parents_df = pd.read_excel(config["main_table_path"])
@@ -464,17 +464,16 @@ def main():
         new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = parents_df.loc[(parents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
-        index_list_f = index_list[:1000]
-        index_list_m = index_list[1000:]
+        index_list_f = index_list[:2000]
+        index_list_m = index_list[2000:]
         list_for_pairs = []
         n = copy.deepcopy(config["number_of_pairs"])
         while n != 0:
             father = random.choice(index_list_f)
             mother = random.choice(index_list_m)
-            new_pair = [father, mother]
-            pair = set(new_pair)
-            if pair not in list_for_pairs and father != mother:
-                list_for_pairs.append(pair)
+            if father not in list_for_pairs and mother not in list_for_pairs and father != mother:
+                list_for_pairs.append(father)
+                list_for_pairs.append(mother)
                 pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
                 kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
                 for k in range(config["kids"]):
@@ -505,8 +504,8 @@ def main():
                     kids_df.iloc[k]["Family_ID"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']))
                     kids_df.iloc[k]["population"] = pop
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
-            n -= 1
-        offsprings_df.to_excel("generated_families.xlsx", index=False)
+                n -= 1
+        offsprings_df.to_excel("generated_families_4000.xlsx", index=False)
 
         ######################
         # Count LR
@@ -579,10 +578,10 @@ def main():
                     lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
                 count_k += 1
             count_el += 1
-        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df.xlsx", index=True)
-        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df.xlsx", index=True)
-        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df.xlsx", index=True)
-        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df.xlsx", index=True)
+        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df_4000.xlsx", index=True)
+        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df_4000.xlsx", index=True)
+        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df_4000.xlsx", index=True)
+        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df_4000.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 

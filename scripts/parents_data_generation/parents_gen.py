@@ -45,7 +45,7 @@ def main():
     ref_dict = empty_freq_table(config["main_table_path"])
     ref_dict = calculate_frequencies(ref_dict, config["main_table_path"])
     print(ref_dict)
-    n_parents = 2000
+    n_parents = 4000
     temp_df = pd.read_excel(config["main_table_path"])
     columns_list = temp_df.columns.values.tolist()
     parents_df = pd.DataFrame(columns=columns_list, index=range(0, n_parents))
@@ -80,7 +80,7 @@ def main():
             loc.pop()
             parents_df.iloc[k][elem_2] = loc[-1]
             loc.pop()
-    parents_df.to_excel("parents_gen_table_RUS.xlsx", index=True)
+    parents_df.to_excel("parents_gen_table_YAK_4000.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
