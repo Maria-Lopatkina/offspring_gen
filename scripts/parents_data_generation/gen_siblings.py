@@ -87,7 +87,7 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                      (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
                       2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"])
                 p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and a not in dic[allele]:
+            elif a not in dic[allele] and b not in dic[allele]:
                 p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] -
                       2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
                      (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
@@ -108,7 +108,7 @@ def calculate_p(s1, s2, k1, k2, dic, allele):
                 p1 = (2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
                      (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
                 p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and a not in dic[allele]:
+            elif a not in dic[allele] and b not in dic[allele]:
                 p1 = (2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
                      (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2

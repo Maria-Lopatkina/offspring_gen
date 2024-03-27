@@ -45,405 +45,168 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
 
 
 # functions for LR calculation
-def hyp_sibl(s1, s2, k1, k2, our_dict, rus_dict, str_elem):
+def hyp_grandparents(g1, g2, k1, k2, our_dict, rus_dict, str_elem):
     #  1 - for our frequencies, 2 - for rus
-    p1, p2 = calculate_p(s1, s2, k1, k2, our_dict, str_elem)
-    p3, p4 = calculate_p(s1, s2, k1, k2, rus_dict, str_elem)
+    p1, p2 = calculate_p(g1, g2, k1, k2, our_dict, str_elem)
+    p3, p4 = calculate_p(g1, g2, k1, k2, rus_dict, str_elem)
     return p1, p2, p3, p4
 
 
-def calculate_p(s1, s2, k1, k2, dic, allele):
+def calculate_p(g1, g2, k1, k2, dic, allele):
+    print(g1, g2, k1, k2, allele)
     p1 = p2 = None
     if k1 == k2:
-        if s1 == s2 and s1 == k1:
+        if g1 == g2 and g1 == k1:
             if k1 in dic[allele]:
-                p1 = 1
+                p1 = dic[allele][k1] * (2 - dic[allele][k1])
                 p2 = (dic[allele][k1] * (2 - dic[allele][k1])) ** 2
             else:
-                p1 = 1
+                p1 = dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-        elif k1 == s1 or k1 == s2:
-            if k1 == s1:
-                a = s1
-                b = s2
-            elif k1 == s2:
-                a = s2
-                b = s1
-            if a in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][a] * dic[allele][b] -
-                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) -
-                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b])
+            print("g1 == g2 and g1 == k1", p1, p2)
+        elif k1 == g1 or k1 == g2:
+            if k1 == g1:
+                a = g1
+            elif k1 == g2:
+                a = g2
+            if a in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele][a]) * (dic[allele][a] * (2 - dic[allele][a]))
                 p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele][b] -
-                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) -
-                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b])
+            elif a not in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]))
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            elif a in dic[allele] and b not in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][a] * dic[allele]["pmin"] -
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"])
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and a not in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-        elif s1 == s2 and k1 != s1:
+            print("k1 == g1 or k1 == g2", p1, p2)
+        elif k1 != g2 and k1 != g2:
             a = k1
-            b = s1
-            if a in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]) / \
-                     (dic[allele][b] * (2 - dic[allele][b])) ** 2
+            if a in dic[allele]:
+                p1 = dic[allele][a] * (dic[allele][a] * (2 - dic[allele][a]))
                 p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]) / \
-                     (dic[allele][b] * (2 - dic[allele][b])) ** 2
+            elif a not in dic[allele]:
+                p1 = dic[allele]["pmin"] * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]))
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            elif a in dic[allele] and b not in dic[allele]:
-                p1 = (2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and a not in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-        elif k1 != s1 and k1 != s2 and s1 != s2:
-            a = k1
-            b = s1
-            c = s2
-            if a in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][c]) / \
-                     (2 * dic[allele][b] * (2 - dic[allele][b]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele][b] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][c])
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele][b] * (2 - dic[allele][b]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele][b] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][c])
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            elif a in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele][c]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c])
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele][b] * (2 - dic[allele][b]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][b] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"])
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c])
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            elif a not in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele][b] * (2 - dic[allele][b]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][b] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"])
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            elif a in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = (dic[allele][a] * (2 - dic[allele][a])) ** 2
-            elif a not in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
+            print("k1 != g2 and k1 != g2", p1, p2)
     else:
-        if s1 == s2 and (s1 == k1 or s1 == k2):
-            a = s1
+        if g1 == g2 and (g1 == k1 or g1 == k2):
+            a = g1
             b = None
-            if s1 == k1:
+            if g1 == k1:
                 b = k2
-            elif s1 == k2:
+            elif g1 == k2:
                 b = k1
             if a in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][a] * dic[allele][b] -
-                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]) / \
-                     (dic[allele][a] * (2 - dic[allele][a])) ** 2
+                p1 = dic[allele][b] * (2 - dic[allele][b]) + dic[allele][b] \
+                     * (dic[allele][a] * (2 - dic[allele][a]) - 2 * dic[allele][a] * dic[allele][b])
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            if a not in dic[allele] and b in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele][b] -
-                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
+            elif a not in dic[allele] and b in dic[allele]:
+                p1 = dic[allele][b] * (2 - dic[allele][b]) + dic[allele][b] \
+                     * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - 2 * dic[allele]["pmin"] * dic[allele][b])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            if a in dic[allele] and b not in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][a] * dic[allele]["pmin"] -
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (dic[allele][a] * (2 - dic[allele][a])) ** 2
+            elif a in dic[allele] and b not in dic[allele]:
+                p1 = dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + dic[allele]["pmin"] \
+                     * (dic[allele][a] * (2 - dic[allele][a]) - 2 * dic[allele][a] * dic[allele]["pmin"])
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            if a not in dic[allele] and b not in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
+            elif a not in dic[allele] and b not in dic[allele]:
+                p1 = dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + dic[allele]["pmin"] \
+                     * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-        if k1 == s1 and k2 == s2:
+            print("g1 == g2 and (g1 == k1 or g1 == k2)", p1, p2)
+        if g1 != g2 and k1 == g1 and k2 == g2:
             a = k1
             b = k2
             if a in dic[allele] and b in dic[allele]:
-                p1 = 1
+                p1 = (0.5 + 0.5 * dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) + \
+                     (0.5 + 0.5 * dic[allele][b]) * dic[allele][a] * (2 - dic[allele][a]) - \
+                     0.5 * (dic[allele][a] + dic[allele][b]) * 2 * dic[allele][a] * dic[allele][b]
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            if a not in dic[allele] and b in dic[allele]:
-                p1 = 1
+            elif a not in dic[allele] and b in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) + \
+                     (0.5 + 0.5 * dic[allele][b]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
+                     0.5 * (dic[allele]["pmin"] + dic[allele][b]) * 2 * dic[allele]["pmin"] * dic[allele][b]
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            if a in dic[allele] and b not in dic[allele]:
-                p1 = 1
+            elif a in dic[allele] and b not in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + \
+                     (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele][a] * (2 - dic[allele][a]) - \
+                     0.5 * (dic[allele][a] + dic[allele]["pmin"]) * 2 * dic[allele][a] * dic[allele]["pmin"]
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            if a not in dic[allele] and b not in dic[allele]:
-                p1 = 1
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-        if s1 != s2 and (k1 == s1 and k2 != s2 or k1 == s2 and k2 != s1 or k1 != s1 and k2 == s2 or k1 != s2 and k2 == s1):
+            elif a not in dic[allele] and b not in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + \
+                     (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
+                     0.5 * (dic[allele]["pmin"] + dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
+                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * \
+                     (2 - dic[allele]["pmin"]) - 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * \
+                     2 * dic[allele]["pmin"] * dic[allele]["pmin"]
+            print("g1 != g2 and k1 == g1 and k2 == g2", p1, p2)
+        if g1 != g2 and (k1 == g1 and k2 != g2 or k1 == g2 and k2 != g1 or k1 != g1 and k2 == g2 or k1 != g2 and k2 == g1):
             a = None
             b = None
-            c = None
-            if k1 == s1 and k2 != s2:
+            if k1 == g1 and k2 != g2:
                 a = k1
                 b = k2
-                c = s2
-            if k1 == s2 and k2 != s1:
+            if k1 == g2 and k2 != g1:
                 a = k1
                 b = k2
-                c = s1
-            if k1 != s1 and k2 == s2:
+            if k1 != g1 and k2 == g2:
                 a = k2
                 b = k1
-                c = s1
-            if k1 != s2 and k2 == s1:
+            if k1 != g2 and k2 == g1:
                 a = k2
                 b = k1
-                c = s2
-            if a in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][b] * dic[allele][c] +
-                      2 * 2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][c]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele][a] * dic[allele][c])
+            if a in dic[allele] and b in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) + \
+                     dic[allele][b] * dic[allele][a] * (2 - dic[allele][a]) - 0.5 * dic[allele][b] * \
+                     2 * dic[allele][a] * dic[allele][b]
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele][b] * dic[allele][c] +
-                      2 * 2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c])
+            elif a not in dic[allele] and b in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) + \
+                     dic[allele][b] * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - 0.5 * dic[allele][b] * \
+                     2 * dic[allele]["pmin"] * dic[allele][b]
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele]["pmin"] * dic[allele][c] +
-                      2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele][c]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele][a] * dic[allele][c])
+            elif a in dic[allele] and b not in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + \
+                     dic[allele]["pmin"] * dic[allele][a] * (2 - dic[allele][a]) - 0.5 * dic[allele]["pmin"] * \
+                     2 * dic[allele][a] * dic[allele]["pmin"]
                 p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele][b] * dic[allele]["pmin"] +
-                      2 * 2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele][c] +
-                      2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][c] * (2 - dic[allele][c]) -
-                      2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c])
+            elif a not in dic[allele] and b not in dic[allele]:
+                p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + \
+                     dic[allele]["pmin"] * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - 0.5 * dic[allele]["pmin"] * \
+                     2 * dic[allele]["pmin"] * dic[allele]["pmin"]
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele][b] * dic[allele]["pmin"] +
-                      2 * 2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * dic[allele][a] * (2 - dic[allele][a]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] +
-                      2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] +
-                      2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-        if s1 == s2 and k1 != s1 and k2 != s1:
+            print("g1 != g2 and (k1 == g1 and k2 != g2 or k1 == g2 and k2 != g1 or k1 != g1 and k2 == g2 or k1 != g2 and k2 == g1", p1, p2)
+        if k1 != g1 and k2 != g2  and k1 != g2 and k2 != g1:
             a = k1
             b = k2
-            c = s1
-            if a in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (dic[allele][c] * (2 - dic[allele][c])) ** 2
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
+            if a in dic[allele] and b in dic[allele]:
+                p1 = dic[allele][a] * dic[allele][b] * (2 - dic[allele][b]) + dic[allele][b] * \
+                     dic[allele][a] * (2 - dic[allele][a])
+                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) -\
                      2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (dic[allele][c] * (2 - dic[allele][c])) ** 2
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
+            elif a not in dic[allele] and b in dic[allele]:
+                p1 = dic[allele]["pmin"] * dic[allele][b] * (2 - dic[allele][b]) + dic[allele][b] * \
+                     dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
+                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) -\
                      2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (dic[allele][c] * (2 - dic[allele][c])) ** 2
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
+            elif a in dic[allele] and b not in dic[allele]:
+                p1 = dic[allele][a] * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + dic[allele]["pmin"] * \
+                     dic[allele][a] * (2 - dic[allele][a])
+                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -\
                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b not in dic[allele] and c in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (dic[allele][c] * (2 - dic[allele][c])) ** 2
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
+            elif a not in dic[allele] and b not in dic[allele]:
+                p1 = dic[allele]["pmin"] * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) + dic[allele]["pmin"] * \
+                     dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
+                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -\
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b not in dic[allele] and c not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-        if s1 != s2 and k1 != s1 and k1 != s2 and k2 != s1 and k2 != s2:
-            a = k1
-            b = k2
-            c = s1
-            d = s2
-            if a in dic[allele] and b in dic[allele] and c in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][d] + 2 *
-                      2 * dic[allele][a] * dic[allele][d] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele][c] * dic[allele][d] * 2 * dic[allele][c] * dic[allele][d])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b in dic[allele] and c in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele][b] * dic[allele][d] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele][c] * dic[allele][d] * 2 * dic[allele][c] * dic[allele][d])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][d] + 2 *
-                      2 * dic[allele][a] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele][c] * dic[allele][d] * 2 * dic[allele][c] * dic[allele][d])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a in dic[allele] and b in dic[allele] and c not in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele][d] + 2 *
-                      2 * dic[allele][a] * dic[allele][d] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][d])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a in dic[allele] and b in dic[allele] and c in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele][b] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][c] * dic[allele]["pmin"] * 2 * dic[allele][c] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b not in dic[allele] and c in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele][d] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele][c] * dic[allele][d] * 2 * dic[allele][c] * dic[allele][d])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b in dic[allele] and c not in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele][d] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][d])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a not in dic[allele] and b in dic[allele] and c in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele][b] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][c] * dic[allele]["pmin"] * 2 * dic[allele][c] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c not in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][d] + 2 *
-                      2 * dic[allele][a] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][d])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a in dic[allele] and b not in dic[allele] and c in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][c] * dic[allele]["pmin"] * 2 * dic[allele][c] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a in dic[allele] and b in dic[allele] and c not in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele][a] * dic[allele][b] * 2 * dic[allele][a] * dic[allele][b]
-            elif a not in dic[allele] and b not in dic[allele] and c not in dic[allele] and d in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][d] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][d] * (2 - dic[allele][d]) -
-                      2 * dic[allele]["pmin"] * dic[allele][d] * 2 * dic[allele]["pmin"] * dic[allele][d])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b not in dic[allele] and c in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele][c] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele][c]) / \
-                     (2 * dic[allele][c] * (2 - dic[allele][c]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele][c] * dic[allele]["pmin"] * 2 * dic[allele][c] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b in dic[allele] and c not in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele][b] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele][b] * (2 - dic[allele][b]) - \
-                     2 * dic[allele]["pmin"] * dic[allele][b] * 2 * dic[allele]["pmin"] * dic[allele][b]
-            elif a in dic[allele] and b not in dic[allele] and c not in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele][a] * (2 - dic[allele][a]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele][a] * dic[allele]["pmin"] * 2 * dic[allele][a] * dic[allele]["pmin"]
-            elif a not in dic[allele] and b not in dic[allele] and c not in dic[allele] and d not in dic[allele]:
-                p1 = (2 * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"] + 2 *
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]) / \
-                     (2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -
-                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
-                p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
-                     2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
+            print("k1 != g1 and k2 != g2  and k1 != g2 and k2 != g1", p1, p2)
     return p1, p2
 
 
@@ -586,14 +349,14 @@ def main():
                 hyp2_ref_new = []
                 hyp1_rus_new = []
                 hyp2_rus_new = []
-                sibl_df = grandparents.loc[[kk]]
+                gr_df = grandparents.loc[[kk]]
                 for loc in range(1, len(columns_list) - 3, 2):
                     el = columns_list[loc].split('_')[0]
                     kid = [prob_df.iloc[0][columns_list[loc]], prob_df.iloc[0][columns_list[loc + 1]]]
-                    sibl = [sibl_df.iloc[0][columns_list[loc]], sibl_df.iloc[0][columns_list[loc + 1]]]
+                    gr = [gr_df.iloc[0][columns_list[loc]], gr_df.iloc[0][columns_list[loc + 1]]]
                     kid.sort()
-                    sibl.sort()
-                    p1, p2, p3, p4 = hyp_sibl(sibl[0], sibl[1], kid[0], kid[1], ref_dict, config["rus_dict"], el)
+                    gr.sort()
+                    p1, p2, p3, p4 = hyp_grandparents(gr[0], gr[1], kid[0], kid[1], ref_dict, config["rus_dict"], el)
                     if el in config["codis_old"]:
                         hyp1_ref_old.append(p1)
                         hyp2_ref_old.append(p2)
