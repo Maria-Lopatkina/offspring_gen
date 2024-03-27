@@ -1,5 +1,5 @@
 # Enter the absolute path to the main file with SNP analysis data
-main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/parents_gen_table_YAK_4000.xlsx"
+main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/parents_gen_table_YAK_240326.xlsx"
 
 # Enter the number of pairs
 number_of_pairs: 1000
