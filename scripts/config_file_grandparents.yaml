@@ -2,10 +2,10 @@
 main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/parents_gen_table_YAK_GRAND.xlsx"
 
 # Enter the number of pairs of grandparents
-number_of_pairs_grands: 100
+number_of_pairs_grands: 3000
 
 # Enter the number of pairs of grandparents
-number_of_pairs_parents: 10
+number_of_pairs_parents: 1000
 
 # Enter the number of offsprings
 kids: 1

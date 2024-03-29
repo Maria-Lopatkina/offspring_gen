@@ -63,7 +63,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
             else:
                 p1 = dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("g1 == g2 and g1 == k1", p1, p2)
         elif k1 == g1 or k1 == g2:
             if k1 == g1:
                 a = g1
@@ -75,7 +74,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
             elif a not in dic[allele]:
                 p1 = (0.5 + 0.5 * dic[allele]["pmin"]) * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]))
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("k1 == g1 or k1 == g2", p1, p2)
         elif k1 != g2 and k1 != g2:
             a = k1
             if a in dic[allele]:
@@ -84,7 +82,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
             elif a not in dic[allele]:
                 p1 = dic[allele]["pmin"] * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]))
                 p2 = (dic[allele]["pmin"] * (2 - dic[allele]["pmin"])) ** 2
-            print("k1 != g2 and k1 != g2", p1, p2)
     else:
         if g1 == g2 and (g1 == k1 or g1 == k2):
             a = g1
@@ -113,7 +110,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
                      * (dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - 2 * dic[allele]["pmin"] * dic[allele]["pmin"])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("g1 == g2 and (g1 == k1 or g1 == k2)", p1, p2)
         if g1 != g2 and k1 == g1 and k2 == g2:
             a = k1
             b = k2
@@ -142,7 +138,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * \
                      (2 - dic[allele]["pmin"]) - 2 * dic[allele]["pmin"] * dic[allele]["pmin"] * \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("g1 != g2 and k1 == g1 and k2 == g2", p1, p2)
         if g1 != g2 and (k1 == g1 and k2 != g2 or k1 == g2 and k2 != g1 or k1 != g1 and k2 == g2 or k1 != g2 and k2 == g1):
             a = None
             b = None
@@ -182,8 +177,7 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"]
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) - \
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("g1 != g2 and (k1 == g1 and k2 != g2 or k1 == g2 and k2 != g1 or k1 != g1 and k2 == g2 or k1 != g2 and k2 == g1", p1, p2)
-        if k1 != g1 and k2 != g2  and k1 != g2 and k2 != g1:
+        if k1 != g1 and k2 != g2 and k1 != g2 and k2 != g1:
             a = k1
             b = k2
             if a in dic[allele] and b in dic[allele]:
@@ -206,7 +200,6 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
                      dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
                 p2 = 2 * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) * dic[allele]["pmin"] * (2 - dic[allele]["pmin"]) -\
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
-            print("k1 != g1 and k2 != g2  and k1 != g2 and k2 != g1", p1, p2)
     return p1, p2
 
 
@@ -317,7 +310,7 @@ def main():
                         m_alleles.sort()
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
                 w += 1
-        offsprings_df.to_excel("generated_families_GRAND_TEST.xlsx", index=False)
+        offsprings_df.to_excel("generated_families_GRAND_240329.xlsx", index=False)
 
         ######################
         # Count LR
@@ -327,11 +320,8 @@ def main():
         kids_index = kidd.index.values.tolist()
         grandparents = lr_all_kids_grands_df.loc[(offsprings_df['Status'] != "kid")]
         grandparents_index = grandparents.index.values.tolist()
-        print(grandparents_index)
         kids_list = lr_all_kids_grands_df.loc[(offsprings_df['Status'] == "kid")]['№'].tolist()
         grandparents_list = lr_all_kids_grands_df.loc[(offsprings_df['Status'] != "kid")]['№'].tolist()
-        print(kids_list)
-        print(grandparents_list)
         lr_old_codis_ref_df = pd.DataFrame(columns=grandparents_list, index=kids_list)
         lr_new_codis_ref_df = pd.DataFrame(columns=grandparents_list, index=kids_list)
         lr_old_codis_rus_df = pd.DataFrame(columns=grandparents_list, index=kids_list)
@@ -397,10 +387,10 @@ def main():
                 lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
                 count_k += 1
             count_el += 1
-        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df_GRAND.xlsx", index=True)
-        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df_GRAND.xlsx", index=True)
-        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df_GRAND.xlsx", index=True)
-        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df_GRAND.xlsx", index=True)
+        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df_240329.xlsx", index=True)
+        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df_240329.xlsx", index=True)
+        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df_240329.xlsx", index=True)
+        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df_240329.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
 
