@@ -53,7 +53,6 @@ def hyp_grandparents(g1, g2, k1, k2, our_dict, rus_dict, str_elem):
 
 
 def calculate_p(g1, g2, k1, k2, dic, allele):
-    print(g1, g2, k1, k2, allele)
     p1 = p2 = None
     if k1 == k2:
         if g1 == g2 and g1 == k1:
@@ -315,13 +314,18 @@ def main():
         ######################
         # Count LR
         lr_all_df = offsprings_df.loc[(offsprings_df['Status'] != "father")]
-        lr_all_kids_grands_df = lr_all_df.loc[(offsprings_df['Status'] != "mother")]
-        kidd = lr_all_kids_grands_df.loc[(offsprings_df['Status'] == "kid")]
+        lr_all_kids_grands_df = lr_all_df.loc[(lr_all_df['Status'] != "mother")]
+        kidd = lr_all_kids_grands_df.loc[(lr_all_kids_grands_df['Status'] == "kid")]
         kids_index = kidd.index.values.tolist()
-        grandparents = lr_all_kids_grands_df.loc[(offsprings_df['Status'] != "kid")]
-        grandparents_index = grandparents.index.values.tolist()
-        kids_list = lr_all_kids_grands_df.loc[(offsprings_df['Status'] == "kid")]['№'].tolist()
-        grandparents_list = lr_all_kids_grands_df.loc[(offsprings_df['Status'] != "kid")]['№'].tolist()
+        grandparents = lr_all_kids_grands_df.loc[(lr_all_kids_grands_df['Status'] != "kid")]
+        grandparents_index = []
+        for uuu in grandparents.index:
+            if grandparents.loc[uuu]["Family_ID"] >= 1:
+                grandparents_index.append(uuu)
+        grandparents_list = []
+        for rrr in grandparents_index:
+            grandparents_list.append(grandparents.loc[rrr]["№"])
+        kids_list = lr_all_kids_grands_df.loc[(lr_all_kids_grands_df['Status'] == "kid")]['№'].tolist()
         lr_old_codis_ref_df = pd.DataFrame(columns=grandparents_list, index=kids_list)
         lr_new_codis_ref_df = pd.DataFrame(columns=grandparents_list, index=kids_list)
         lr_old_codis_rus_df = pd.DataFrame(columns=grandparents_list, index=kids_list)

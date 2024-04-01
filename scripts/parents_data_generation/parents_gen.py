@@ -45,7 +45,7 @@ def main():
     ref_dict = empty_freq_table(config["main_table_path"])
     ref_dict = calculate_frequencies(ref_dict, config["main_table_path"])
     print(ref_dict)
-    n_parents = 8000
+    n_parents = 8000    # Change according to the config file
     temp_df = pd.read_excel(config["main_table_path"])
     columns_list = temp_df.columns.values.tolist()
     parents_df = pd.DataFrame(columns=columns_list, index=range(0, n_parents))

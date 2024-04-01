@@ -5,7 +5,7 @@ import time
 import yaml
 
 
-def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
+def empty_freq_table(path):  # Create empty dictionaries for autosomal str allele frequencies
     freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
     key_dict = []
@@ -15,7 +15,7 @@ def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
     return freq_dict
 
 
-def calculate_frequencies(d, path):  # Calculate alleles frequencies
+def calculate_frequencies(d, path):  # Calculate autosomal str allele frequencies
     freq_df = pd.read_excel(path)
     f_columns = freq_df.columns.values.tolist()
     for al in range(1, len(f_columns) - 2, 2):
@@ -40,14 +40,15 @@ def calculate_frequencies(d, path):  # Calculate alleles frequencies
 
 def main():
     start = time.time()
-    with open("../config_file.yaml", "r") as yaml_file:
+    with open("../config_file_x_str.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     ref_dict = empty_freq_table(config["main_table_path"])
     ref_dict = calculate_frequencies(ref_dict, config["main_table_path"])
-    print(ref_dict)
-    n_parents = 2000
+    n_parents = 2000    # Change according to the config file
     temp_df = pd.read_excel(config["main_table_path"])
     columns_list = temp_df.columns.values.tolist()
+    columns_list = columns_list[:-2]
+    columns_list.extend(config["add_columns"])
     parents_df = pd.DataFrame(columns=columns_list, index=range(0, n_parents))
     for f in range(round(n_parents/2)):
         parents_df.iloc[f]["№"] = "f" + str(f + 1)
@@ -80,6 +81,38 @@ def main():
             loc.pop()
             parents_df.iloc[k][elem_2] = loc[-1]
             loc.pop()
+
+    # Add X-STR data
+    bur_dict = config["bur_all"]
+    for el in bur_dict.keys():
+        s = 0
+        for i in bur_dict[el].keys():
+            bur_dict[el][i] = round(bur_dict[el][i] * n_parents * 2)
+            s += bur_dict[el][i]
+        if s != n_parents * 2:
+            while s != n_parents * 2:
+                ii = random.randint(0, len(bur_dict[el]) - 1)
+                if n_parents * 2 - s > 0:
+                    bur_dict[el][list(bur_dict[el].keys())[ii]] += 1
+                    s += 1
+                else:
+                    bur_dict[el][list(bur_dict[el].keys())[ii]] -= 1
+                    s -= 1
+    for el in bur_dict.keys():
+        loc = []
+        elem_1 = el + "_1"
+        elem_2 = el + "_2"
+        for i in bur_dict[el].keys():
+            for k in range(int(round(bur_dict[el][i]))):
+                loc.append(i)
+        random.shuffle(loc)
+        print(loc)
+        for k in range(n_parents):
+            parents_df.iloc[k][elem_1] = loc[-1]
+            loc.pop()
+            parents_df.iloc[k][elem_2] = loc[-1]
+            loc.pop()
+
     parents_df.to_excel("parents_gen_table_GIN.xlsx", index=True)
     print(round(time.time() - start, 2), 's')
 
