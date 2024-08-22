@@ -204,23 +204,23 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
 
 def main():
     start = time.time()
-    with open("../config_file_grandparents.yaml", "r") as yaml_file:
+    with open("./config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
-    grandparents_df = pd.read_excel(config["main_table_path"])
+    grandparents_df = pd.read_excel(config["output_file_gen_path"])
     columns_list = grandparents_df.columns.values.tolist()
     columns_list = columns_list[:-1]
     columns_list.append("Family_ID")
     columns_list.append("Status")
     offsprings_df = pd.DataFrame(columns=columns_list)    # Create main df
-    for pop in config["populations"]:
+    for pop in config["populations_grand"]:
         ref_dict = empty_freq_table(config["main_table_path"])
         ref_dict = calculate_frequencies(pop, ref_dict, config["main_table_path"])
         new_pair_df = pd.DataFrame(columns=columns_list, index=[0, 1])
         temp_parents_df = grandparents_df.loc[(grandparents_df['population'] == pop)]
         index_list = temp_parents_df.index.values.tolist()
-        index_list_f = index_list[:4000]
-        index_list_m = index_list[4000:]
+        index_list_f = index_list[:round(config["number_of_gen_individuals"]/2)]
+        index_list_m = index_list[round(config["number_of_gen_individuals"]/2):]
         list_for_pairs = []
         n = copy.deepcopy(config["number_of_pairs_grands"])
         while n != 0:
@@ -230,8 +230,8 @@ def main():
                 list_for_pairs.append(father)
                 list_for_pairs.append(mother)
                 pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
-                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
-                for k in range(config["kids"]):
+                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["grandchildren"])])
+                for k in range(config["grandchildren"]):
                     kids_df.iloc[k]["Status"] = random.choice(["father", "mother"])
                     kids_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-" +
                                             str(k + 1))
@@ -274,8 +274,8 @@ def main():
                 list_for_pairs.append(father)
                 list_for_pairs.append(mother)
                 pair_df = temp_parents_df.loc[[father, mother]]    # create df for one random pair
-                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["kids"])])
-                for k in range(config["kids"]):
+                kids_df = pd.DataFrame(columns=columns_list, index=[i for i in range(0, config["grandchildren"])])
+                for k in range(config["grandchildren"]):
                     kids_df.iloc[k]["Status"] = "kid"
                     kids_df.iloc[k]["№"] = (str(pair_df.iloc[0]['№']) + "-" + str(pair_df.iloc[1]['№']) + "-" +
                                             str(k + 1))
@@ -309,7 +309,7 @@ def main():
                         m_alleles.sort()
                     offsprings_df = pd.concat([offsprings_df, kids_df.loc[[k]]], ignore_index=True)
                 w += 1
-        offsprings_df.to_excel("generated_families_GRAND_240329.xlsx", index=False)
+        offsprings_df.to_excel(config["output_file_grand_path"], index=False)
 
         ######################
         # Count LR
@@ -391,10 +391,10 @@ def main():
                 lr_new_codis_rus_df.iat[count_el, count_k] = multiplication_7 / multiplication_8
                 count_k += 1
             count_el += 1
-        lr_old_codis_ref_df.to_excel("generated_lr_old_codis_ref_df_240329.xlsx", index=True)
-        lr_new_codis_ref_df.to_excel("generated_lr_new_codis_ref_df_240329.xlsx", index=True)
-        lr_old_codis_rus_df.to_excel("generated_lr_old_codis_rus_df_240329.xlsx", index=True)
-        lr_new_codis_rus_df.to_excel("generated_lr_new_codis_rus_df_240329.xlsx", index=True)
+        lr_old_codis_ref_df.to_excel(config["lr_old_codis_ref_df_grand_path"], index=True)
+        lr_new_codis_ref_df.to_excel(config["lr_new_codis_ref_df_grand_path"], index=True)
+        lr_old_codis_rus_df.to_excel(config["lr_old_codis_rus_df_grand_path"], index=True)
+        lr_new_codis_rus_df.to_excel(config["lr_new_codis_rus_df_grand_path"], index=True)
     print(round(time.time() - start, 2), 's')
 
 

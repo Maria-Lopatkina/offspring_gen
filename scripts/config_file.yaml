@@ -1,23 +1,87 @@
+######################## Files and variables for generated table  ########################
+
 # Enter the absolute path to the main file with SNP analysis data
 main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/ASTR22_main_input.xlsx"
 
-# Enter the number of pairs
-number_of_pairs: 10
+# Enter the absolute path to the output file with generated parents data
+output_file_gen_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/parents_gen.xlsx"
 
-# Enter the number of offsprings
-kids: 3
+# Enter the number of generated individuals:
+number_of_gen_individuals: 1000
 
 # Enter the list of population names
-# ex. "якуты" or "тувинцы"        "андийцы", "тувинцы", "цезы", "якуты", "гинухцы"
+# ex. ["якуты"] or ["якуты", "тувинцы"]
 populations: ["якуты"]
 
 # Enter the frequency of STR-locus mutation
 mut_rate: 0.0045
 
-# Enter the frequency of different mutations:
-one_step: 0.95
-two_step: 0.04
-three_step: 0.01
+############################ Files and variables for PP, PI, and LR calculations ############################
+
+# Enter the absolute path to the final output file
+final_output_file_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/fin_output.xlsx"
+
+# Enter the number of pairs
+number_of_pairs: 5
+
+# Enter the number of offsprings
+kids: 3
+
+# Enter the list of population names
+# ex. ["якуты"] or ["якуты", "тувинцы"]
+populations_all: ["якуты"]
+
+#################################### Files and variables for siblings calculations ####################################
+
+# Enter the absolute path to the output file with generated families data
+output_file_sibl_family_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_families.xlsx"
+
+# Enter the absolute path to the final output files with LR calculations
+lr_old_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_old_codis_ref_df.xlsx"
+lr_new_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_new_codis_ref_df.xlsx"
+lr_old_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_old_codis_rus_df.xlsx"
+lr_new_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_new_codis_rus_df.xlsx"
+
+# Enter the number of pairs:
+number_of_pairs_sibl: 5
+
+# Enter the number of siblings:
+siblings: 5
+
+# Enter the list of population names
+# ex. ["якуты"] or ["якуты", "тувинцы"]
+populations_sibl: ["якуты"]
+
+################################## Files and variables for grandparents calculations ##################################
+
+# Enter the absolute path to the final output file
+output_file_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_families.xlsx"
+
+# Enter the absolute path to the final output files with LR calculations
+lr_old_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_old_codis_ref_df.xlsx"
+lr_new_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_new_codis_ref_df.xlsx"
+lr_old_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_old_codis_rus_df.xlsx"
+lr_new_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_new_codis_rus_df.xlsx"
+
+# Enter the number of pairs of grandparents
+number_of_pairs_grands: 100
+
+# Enter the number of pairs of parents
+number_of_pairs_parents: 10
+
+# Enter the number of grandchildren
+grandchildren: 1
+
+# Enter the list of population names
+# ex. ["якуты"] or ["якуты", "тувинцы"]
+populations_grand: ["якуты"]
+
+################################## Files and variables for X-STR calculations ##################################
+
+
+
+
+############################################### Lists and Dictionaries ###############################################
 
 # Enter the name of new set of loci from ASTR22_main:
 codis_old: ["CSF1PO", "D3S1358", "D5S818", "D7S820", "D8S1179", "D13S317", "D16S539", "D18S51", "D21S11", "FGA",
@@ -107,80 +171,9 @@ rus_dict: {"CSF1PO": {7: 0.0004, 8: 0.0012, 9: 0.0438, 10: 0.2824, 11: 0.2882, 1
                       10: 0.1406, 11: 0.1666, 12: 0.1611, 13: 0.1706, 13.1: 0.0004, 14: 0.0639, 15: 0.0161, 16: 0.004,
                       17: 0.0004, "pmin": 0.0004}}
 
-# Enter the dictionary with frequencies of X-STR:
-bur_all: {"DXS8378": {9: 0.043, 10: 0.385, 11: 0.363, 12: 0.199, 13: 0.009, "pmin": 0.0003},
-          "GATA172D05": {6: 0.064, 7: 0.003, 8: 0.067, 9: 0.082, 10: 0.498, 11: 0.210, 12: 0.073, 13: 0.003,
-                         "pmin": 0.0003},
-          "DXS7132": {12: 0.109, 13: 0.228, 14: 0.283, 15: 0.277, 16: 0.094, 17: 0.009, "pmin": 0.0003},
-          "DXS9898": {8.3: 0.061, 10: 0.006, 11: 0.109, 12: 0.459, 13: 0.298, 14: 0.067, "pmin": 0.0003},
-          "DXS7423": {12: 0.006, 13: 0.030, 14: 0.249, 15: 0.595, 16: 0.108, 17: 0.006, 19: 0.006, "pmin": 0.0003},
-          "DXS6789": {14: 0.003, 15: 0.066, 16: 0.179, 17: 0.024, 18: 0.006, 19: 0.075, 20: 0.233, 21: 0.230,
-                      22: 0.137, 23: 0.048, "pmin": 0.0003},
-          "DXS8377": {38: 0.003, 41: 0.003, 42: 0.015, 43: 0.058, 44: 0.058, 45: 0.116, 46: 0.082, 47: 0.088,
-                      48: 0.104, 49: 0.152, 50: 0.137, 51: 0.037, 52: 0.034, 53: 0.052, 54: 0.052, 55: 0.009,
-                      "pmin": 0.0003},
-          "DXS101": {18: 0.009, 19: 0.003, 20: 0.009, 21: 0.003, 22: 0.015, 23: 0.105, 24: 0.215, 25: 0.240,
-                     26: 0.231, 27: 0.098, 28: 0.043, 29: 0.015, 30: 0.009, 31: 0.003, "pmin": 0.0003},
-          "DXS6809": {28: 0.021, 29: 0.024, 30: 0.033, 31: 0.094, 32: 0.248, 33: 0.200, 34: 0.236, 35: 0.109,
-                      36: 0.024, 37: 0.009, "pmin": 0.0003},
-          "HPRTB": {8: 0.003, 10: 0.003, 11: 0.031, 12: 0.223, 13: 0.401, 14: 0.297, 15: 0.043, "pmin": 0.0003}}
-
-bur_kurumkan_m: {"DXS8378": {10: 0.304, 11: 0.478, 12: 0.217 , "pmin": 0.0003},
-                 "GATA172D05": {6: 0.042, 8: 0.083,9: 0.042, 10: 0.542, 11: 0.208, 12: 0.083, "pmin": 0.0003},
-                 "DXS7132": {12: 0.125, 13: 0.083, 14: 0.375, 15: 0.333, 17: 0.083, "pmin": 0.0003},
-                 "DXS9898": {8.3: 0.042, 10: 0.042, 11: 0.125, 12: 0.333, 13: 0.417, 14: 0.042, "pmin": 0.0003},
-                 "DXS7423": {13: 0.083, 14: 0.250, 15: 0.500, 16: 0.167, "pmin": 0.0003},
-                 "DXS6789": {15: 0.125, 16: 0.292, 17: 0.042, 19: 0.042, 20: 0.167, 21: 0.208, 22: 0.125,
-                             "pmin": 0.0003},
-                 "DXS8377": {38: 0.043, 41: 0.043, 43: 0.043, 44: 0.087, 45: 0.087,46: 0.174, 47: 0.043, 48: 0.348,
-                             49: 0.043, 51: 0.043, 53: 0.043, "pmin": 0.0003},
-                 "DXS101": {22: 0.042, 23: 0.125, 24: 0.208, 25: 0.167, 26: 0.167, 27: 0.125, 28: 0.125, 29: 0.042,
-                            "pmin": 0.0003},
-                 "DXS6809": {28: 0.083, 31: 0.083, 32: 0.250, 33: 0.375, 34: 0.208, "pmin": 0.0003},
-                 "HPRTB": {11: 0.042, 12: 0.333, 13: 0.167, 14: 0.375, 15: 0.083, "pmin": 0.0003}}
-
-bur_kurumkan_f: {"DXS8378": {9: 0.042, 10: 0.392, 11: 0.358, 12: 0.200, 13: 0.008, "pmin": 0.0003},
-                 "GATA172D05": {6: 0.095, 8: 0.040, 9: 0.048, 10: 0.500, 11: 0.246, 12: 0.063, 13: 0.008,
-                                "pmin": 0.0003},
-                 "DXS7132": {12: 0.113, 13: 0.177, 14: 0.242, 15: 0.331, 16: 0.129, 17: 0.008, "pmin": 0.0003},
-                 "DXS9898": {8.3: 0.075, 10: 0.008, 11: 0.108, 12: 0.475, 13: 0.267, 14: 0.067, "pmin": 0.0003},
-                 "DXS7423": {12: 0.008, 13: 0.056, 14: 0.226, 15: 0.629, 16: 0.081, "pmin": 0.0003},
-                 "DXS6789": {15: 0.032, 16: 0.183, 17: 0.024, 19: 0.079, 20: 0.159, 21: 0.278, 22: 0.198, 23: 0.048,
-                             "pmin": 0.0003},
-                 "DXS8377": {42: 0.016, 43: 0.041, 44: 0.057, 45: 0.090, 46: 0.066, 47: 0.107, 48: 0.074, 49: 0.197,
-                             50: 0.197, 51: 0.057, 52: 0.033, 53: 0.041, 54: 0.025, "pmin": 0.0003},
-                 "DXS101": {18: 0.008, 20: 0.008, 22: 0.008, 23: 0.111, 24: 0.198, 25: 0.214, 26: 0.270, 27: 0.103,
-                            28: 0.056, 29: 0.016, 30: 0.008, "pmin": 0.0003},
-                 DXS6809": {28: 0.041, 29: 0.025, 30: 0.049, 31: 0.082, 32: 0.238, 33: 0.197, 34: 0.230, 35: 0.131,
-                            36: 0.008, "pmin": 0.0003},
-                 "HPRTB": {11: 0.026, 12: 0.233, 13: 0.405, 14: 0.302, 15: 0.034, "pmin": 0.0003}}
-
-bur_aginskoe_m: {"DXS8378": {9: 0.095, 10: 0.357, 11: 0.333, 12: 0.190, 13: 0.024, "pmin": 0.0003},
-                 "GATA172D05": {6: 0.070, 8: 0.070, 9: 0.186, 10: 0.442, 11: 0.186, 12: 0.047, "pmin": 0.0003},
-                 "DXS7132": {12: 0.167, 13: 0.190, 14: 0.310, 15: 0.262, 16: 0.071, "pmin": 0.0003},
-                 "DXS9898": {8.3: 0.047, 11: 0.093, 12: 0.535, 13: 0.302, 14: 0.023, "pmin": 0.0003},
-                 "DXS7423": {13: 0.023, 14: 0.233, 15: 0.558, 16: 0.163, 17: 0.023, "pmin": 0.0003},
-                 "DXS6789": {15: 0.093, 16: 0.186, 17: 0.047, 19: 0.116, 20: 0.233, 21: 0.186, 22: 0.116, 23: 0.023,
-                             "pmin": 0.0003},
-                 "DXS8377": {42: 0.026, 43: 0.103, 44: 0.103, 45: 0.205, 46: 0.051, 47: 0.026, 48: 0.154, 49: 0.077,
-                             50: 0.128, 52: 0.026, 53: 0.051, 54: 0.026, 55: 0.026, "pmin": 0.0003},
-                 "DXS101": {18: 0.047, 20: 0.023, 22: 0.023, 23: 0.070, 24: 0.256, 25: 0.233, 26: 0.209, 27: 0.093,
-                            30: 0.047, "pmin": 0.0003},
-                 "DXS6809": {29: 0.024, 31: 0.190, 32: 0.167, 33: 0.190, 34: 0.214, 35: 0.119, 36: 0.048, 37: 0.048,
-                             "pmin": 0.0003},
-                 "HPRTB": {12: 0.302, 13: 0.349, 14: 0.302, 15: 0.047, "pmin": 0.0003}}
-
-bur_aginskoe_f: {"DXS8378": {9: 0.037, 10: 0.397, 11: 0.360, 12: 0.199, 13: 0.007, "pmin": 0.0003},
-                 "GATA172D05": {6: 0.037, 7: 0.007, 8: 0.082, 9: 0.090, 10: 0.507, 11: 0.87, 12: 0.090, "pmin": 0.0003},
-                 "DXS7132": {12: 0.087, 13: 0.304, 14: 0.297, 15: 0.225, 16: 0.087, "pmin": 0.0003},
-                 "DXS9898": {8.3: 0.057, 11: 0.100, 12: 0.450, 13: 0.307, 14: 0.086, "pmin": 0.0003},
-                 "DXS7423": {12: 0.007, 14: 0.275, 15: 0.592, 16: 0.106, 17: 0.007, 19: 0.014, "pmin": 0.0003},
-                 "DXS6789": {14: 0.007, 15: 0.077, 16: 0.155, 17: 0.014, 18: 0.014, 19: 0.063, 20: 0.310, 21: 0.204,
-                             22: 0.092, 23: 0.063, "pmin": 0.0003},
-                 "DXS8377": {42: 0.014, 43: 0.063, 44: 0.042, 45: 0.118, 46: 0.090, 47: 0.097, 48: 0.076, 49: 0.153,
-                             50: 0.111, 51: 0.028, 52: 0.042, 53: 0.063, 54: 0.090, 55: 0.014, "pmin": 0.0003},
-                 "DXS101": {19: 0.008, 20: 0.008, 21: 0.008, 22: 0.015, 23: 0.106, 24: 0.220, 25: 0.280, 26: 0.212,
-                            27: 0.091, 28: 0.030, 29: 0.015, 31: 0.008, "pmin": 0.0003},
-                 "DXS6809": {29: 0.028, 30: 0.035, 31: 0.077, 32: 0.282, 33: 0.176, 34: 0.254, 35: 0.106, 36: 0.035,
-                             37: 0.007, "pmin": 0.0003},
-                 "HPRTB": {8: 0.007, 10: 0.007, 11: 0.042, 12: 0.174, 13: 0.451, 14: 0.278, 15: 0.042, "pmin": 0.0003}}
+names: {"гагаузы": "GAG", "коми": "COM", "марийцы": "MAR", "молдаване": "MOL", "русские": "RUS", "украинцы": "UKR",
+        "калмыки": "KAL", "буряты": "BU", "якуты": "YAK", "алтайцы": "ALT", "кеты": "KET", "тувинцы": "TUV",
+        "татары": "TAT", "хакасы": "KHA", "шорцы": "SHO", "казахи": "KAZ", "киргизы": "KYR", "узбеки": "UZ",
+        "каратинцы": "KAR", "аварцы": "AV", арчинцы": "AR", "тлибишинцы": "TL", "ахвахцы": "AKH", "чамалинцы": "CHA",
+        "багулалы": "BAG", "цезы": "CEZ", "гинухцы": "GIN", "бежтинцы": "BE", "андийцы": "AND", "ботлихцы": "BOT",
+        "тиндинцы": "TIN", "хваршины": "KHV", "лакецы": "LAK", "табасараны": "TAB", "годоберинцы": "GOL"}

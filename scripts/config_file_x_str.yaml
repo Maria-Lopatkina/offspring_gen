@@ -5,7 +5,7 @@ main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/ASTR22_main_i
 number_of_parents: 2000
 
 # Enter the number of pairs
-number_of_pairs: 1
+number_of_pairs: 1000
 
 # Enter the number of offsprings
 kids: 1
