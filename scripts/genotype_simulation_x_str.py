@@ -1,8 +1,6 @@
 import pandas as pd
 import random
-import time
 import yaml
-
 
 def empty_freq_table(path):  # Create empty dictionaries for autosomal str allele frequencies
     freq_df = pd.read_excel(path)
@@ -12,7 +10,6 @@ def empty_freq_table(path):  # Create empty dictionaries for autosomal str allel
         key_dict.append(list(f_columns[el].split("_"))[0])
     freq_dict = dict.fromkeys(key_dict)
     return freq_dict
-
 
 def calculate_frequencies(d, path, gr):  # Calculate autosomal str allele frequencies
     freq_df = pd.read_excel(path)
@@ -37,9 +34,7 @@ def calculate_frequencies(d, path, gr):  # Calculate autosomal str allele freque
         d[allele_name] = new_aa
     return d
 
-
 def main():
-    start = time.time()
     with open("../config_file_x_str.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     ref_dict = empty_freq_table(config["main_table_path"])
@@ -213,8 +208,6 @@ def main():
         parents_df.iloc[j]["population"] = config["population"]
         parents_df.iloc[j]["groups"] = config["group"]
     parents_df.to_excel("generated_families.xlsx", index=True)
-    print(round(time.time() - start, 2), 's')
-
 
 if __name__ == "__main__":
     main()

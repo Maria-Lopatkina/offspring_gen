@@ -1,6 +1,5 @@
 import pandas as pd
 import random
-import time
 import yaml
 
 def empty_freq_table(path):
@@ -61,8 +60,6 @@ def main():
 
     Generates a table with the genotypes of individuals based on STR allele frequencies and saves it as an .xlsx file.
     """
-
-    start = time.time()
     with open("./config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     ref_dict = empty_freq_table(config["main_table_path"])
@@ -110,7 +107,6 @@ def main():
                 loc.pop()
         final_df = pd.concat([final_df, parents_df], ignore_index=True)
     final_df.to_excel(config["output_file_gen_path"], index=False)
-    print(round(time.time() - start, 2), 's')
 
 if __name__ == "__main__":
     main()

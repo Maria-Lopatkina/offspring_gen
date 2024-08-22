@@ -1,9 +1,7 @@
 import copy
 import pandas as pd
 import random
-import time
 import yaml
-
 
 def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
     freq_df = pd.read_excel(path)
@@ -13,7 +11,6 @@ def empty_freq_table(path):  # Create empty dictionaries for allele frequencies
         key_dict.append(list(f_columns[el].split("_"))[0])
     freq_dict = dict.fromkeys(key_dict)
     return freq_dict
-
 
 def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
     freq_df = pd.read_excel(path)
@@ -41,7 +38,6 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
         d[ii][k] = v
     return d
 
-
 def inx_mutation(n_p, k, m_r, one, two, three):
     one_stp = []
     two_stp = []
@@ -65,13 +61,11 @@ def inx_mutation(n_p, k, m_r, one, two, three):
                 three_stp.append(a)
     return one_stp, two_stp, three_stp
 
-
 def father_trio(f1, f2, m1, m2, k1, k2):
     if (f1 == k1 and m1 == k2) or (f2 == k1 and m2 == k2) or (f1 == k1 and m2 == k2) or (f2 == k1 and m1 == k2) or \
             (f1 == k2 and m1 == k1) or (f2 == k2 and m2 == k1) or (f1 == k2 and m2 == k1) or (f2 == k2 and m1 == k1):
         return True
     return False
-
 
 def father_duo(f1, f2, k1, k2):
     for i in f1, f2:
@@ -79,7 +73,6 @@ def father_duo(f1, f2, k1, k2):
             if i == j:
                 return True
     return False
-
 
 def find_father(i_list, c_list, t_df, k_df, family, n_of_mis, codis, father_ind, mother_ind):
     n_fathers = 0
@@ -112,7 +105,6 @@ def find_father(i_list, c_list, t_df, k_df, family, n_of_mis, codis, father_ind,
                 ids_father[i] = mismatch
     return n_fathers, ids_father
 
-
 def trio_freq_father_allele(m1, m2, k1, k2):
     other_all = None
     if k1 == k2:    # Child is homozygous
@@ -133,7 +125,6 @@ def trio_freq_father_allele(m1, m2, k1, k2):
                         kn = True
                         return f_all, other_all, kn
 
-
 def duo_freq_father_allele(k1, k2):
     other_all = None
     if k1 == k2:    # Child is homozygote
@@ -145,7 +136,6 @@ def duo_freq_father_allele(k1, k2):
         other_all = k2
         kn = False
         return f_all, other_all, kn
-
 
 def calculate_q(str_list, allele_name, dic, f_a, o_a, know):
     q = None
@@ -172,7 +162,6 @@ def calculate_q(str_list, allele_name, dic, f_a, o_a, know):
     else:
         return None
 
-
 # functions for LR calculation
 def hyp_trio_wo_mut(m1, m2, k1, k2, our_dict, str_elem):
     #  1 and 2 - for our data, 3 and 4 - for rus
@@ -180,25 +169,21 @@ def hyp_trio_wo_mut(m1, m2, k1, k2, our_dict, str_elem):
     p2 = calculate_p_trio(m1, m2, k1, k2, our_dict, str_elem)
     return p1, p2
 
-
 def hyp_trio_mut(m1, m2, k1, k2, our_dict, str_elem, mut):
     #  1 and 2 - for our data, 3 and 4 - for rus
     p1 = mut
     p2 = calculate_p_trio(m1, m2, k1, k2, our_dict, str_elem)
     return p1, p2
 
-
 def hyp_duo_wo_mut(f1, f2, k1, k2, our_dict, str_elem):
     #  1 and 2 - for our data, 3 and 4 - for rus
     p1, p2 = calculate_p_wo_mut_duo(f1, f2, k1, k2, our_dict, str_elem)
     return p1, p2
 
-
 def hyp_duo_mut(k1, k2, our_dict, str_elem, mut):
     #  1 and 2 - for our data, 3 and 4 - for rus
     p1, p2 = calculate_p_mut_duo(k1, k2, our_dict, str_elem, mut)
     return p1, p2
-
 
 def calculate_p_trio(m1, m2, k1, k2, dic, allele):
     p = None
@@ -228,7 +213,6 @@ def calculate_p_trio(m1, m2, k1, k2, dic, allele):
             else:
                 p = dic[allele]["pmin"] * (2 - dic[allele]["pmin"])
     return p
-
 
 def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
     p1 = p2 = None
@@ -284,7 +268,6 @@ def calculate_p_wo_mut_duo(f1, f2, k1, k2, dic, allele):
                       (2 - dic[allele]["pmin"]) - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2)
     return p1, p2
 
-
 def calculate_p_mut_duo(k1, k2, dic, allele, mut):
     p1 = p2 = None
     if k1 == k2:
@@ -313,9 +296,7 @@ def calculate_p_mut_duo(k1, k2, dic, allele, mut):
                   - (2 * dic[allele]["pmin"] * dic[allele]["pmin"]) ** 2)
     return p1, p2
 
-
 def main():
-    start = time.time()
     with open("../config_file_avar.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
@@ -968,8 +949,6 @@ def main():
                 n -= 1
     # offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("output_gen_gen_AVAR.xlsx", index=True)
-    print(round(time.time() - start, 2), 's')
-
 
 if __name__ == "__main__":
     main()

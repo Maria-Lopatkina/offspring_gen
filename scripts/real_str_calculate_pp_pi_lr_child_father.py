@@ -3,12 +3,9 @@ Main script for population generation based on STR-analysis data. User needs the
 ("ASTR_main.xlsx"). It calculates PI and PP for real father and for potential fathers (false positive fathers).
 """
 
-
 import copy
 import random
 import pandas as pd
-import time
-
 
 def empty_freq_table():  # Create empty dictionaries for allele frequencies
     freq_df = pd.read_excel("ASTR22_main.xlsx")
@@ -18,7 +15,6 @@ def empty_freq_table():  # Create empty dictionaries for allele frequencies
         key_dict.append(list(f_columns[el].split("_"))[0])
     freq_dict = dict.fromkeys(key_dict)
     return freq_dict
-
 
 def calculate_frequencies(p, d):  # Calculate alleles frequencies for three populations
     freq_df = pd.read_excel("ASTR22_main.xlsx")
@@ -43,13 +39,11 @@ def calculate_frequencies(p, d):  # Calculate alleles frequencies for three popu
         d[allele_name] = new_aa
     return d
 
-
 def father_trio(f1, f2, m1, m2, k1, k2):
     if (f1 == k1 and m1 == k2) or (f2 == k1 and m2 == k2) or (f1 == k1 and m2 == k2) or (f2 == k1 and m1 == k2) or \
             (f1 == k2 and m1 == k1) or (f2 == k2 and m2 == k1) or (f1 == k2 and m2 == k1) or (f2 == k2 and m1 == k1):
         return True
     return False
-
 
 def father_duo(f1, f2, k1, k2):
     for i in f1, f2:
@@ -57,7 +51,6 @@ def father_duo(f1, f2, k1, k2):
             if i == j:
                 return True
     return False
-
 
 def find_father(i_list, c_list, t_df, k_df, family, n_of_mis, codis, father_ind, mother_ind):
     n_fathers = 0
@@ -90,7 +83,6 @@ def find_father(i_list, c_list, t_df, k_df, family, n_of_mis, codis, father_ind,
                 ids_father[i] = mismatch
     return n_fathers, ids_father
 
-
 def trio_freq_father_allele(m1, m2, k1, k2):
     other_all = None
     if k1 == k2:    # Child is homozygous
@@ -111,7 +103,6 @@ def trio_freq_father_allele(m1, m2, k1, k2):
                         kn = True
                         return f_all, other_all, kn
 
-
 def duo_freq_father_allele(k1, k2):
     other_all = None
     if k1 == k2:    # Child is homozygous
@@ -124,7 +115,6 @@ def duo_freq_father_allele(k1, k2):
         kn = False
         return f_all, other_all, kn
 
-
 def calculate_q(str_list, allele_name, ref_dict, f_a, o_a, know):
     if allele_name in str_list:
         if know:
@@ -135,7 +125,6 @@ def calculate_q(str_list, allele_name, ref_dict, f_a, o_a, know):
         return q
     else:
         return None
-
 
 def calculate_q_rus(str_list, allele_name, rus_dict, f_a, o_a, know):
     q = None
@@ -162,9 +151,7 @@ def calculate_q_rus(str_list, allele_name, rus_dict, f_a, o_a, know):
     else:
         return None
 
-
 def main():
-    start = time.time()
     number_of_pairs = int(input("Enter the number of pairs: "))
     kids = int(input("Enter the number of offsprings: "))
     population = input("Enter the population name: ")
@@ -582,8 +569,6 @@ def main():
             n -= 1
     offsprings_df.drop(columns=["groups"], axis=1, inplace=True)    # parents data in output
     offsprings_df.to_excel("NEW_output.xlsx", index=False)
-    print(round(time.time() - start, 2), 's')
-
 
 if __name__ == "__main__":
     main()

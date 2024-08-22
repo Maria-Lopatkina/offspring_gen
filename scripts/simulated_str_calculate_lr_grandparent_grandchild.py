@@ -1,9 +1,7 @@
 import copy
 import pandas as pd
 import random
-import time
 import yaml
-
 
 # Generate and count the LR for
 
@@ -15,7 +13,6 @@ def empty_freq_table(path):  # Create empty dictionaries for calculation of alle
         key_dict.append(list(f_columns[el].split("_"))[0])
     freq_dict = dict.fromkeys(key_dict)
     return freq_dict
-
 
 def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
     freq_df = pd.read_excel(path)
@@ -43,14 +40,12 @@ def calculate_frequencies(p, d, path):  # Calculate alleles frequencies
         d[ii][k] = v
     return d
 
-
 # functions for LR calculation
 def hyp_grandparents(g1, g2, k1, k2, our_dict, rus_dict, str_elem):
     #  1 - for our frequencies, 2 - for rus
     p1, p2 = calculate_p(g1, g2, k1, k2, our_dict, str_elem)
     p3, p4 = calculate_p(g1, g2, k1, k2, rus_dict, str_elem)
     return p1, p2, p3, p4
-
 
 def calculate_p(g1, g2, k1, k2, dic, allele):
     p1 = p2 = None
@@ -201,9 +196,7 @@ def calculate_p(g1, g2, k1, k2, dic, allele):
                      2 * dic[allele]["pmin"] * dic[allele]["pmin"] * 2 * dic[allele]["pmin"] * dic[allele]["pmin"]
     return p1, p2
 
-
 def main():
-    start = time.time()
     with open("./config_file.yaml", "r") as yaml_file:
         config = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # Create dataframe with offsprings
@@ -395,8 +388,6 @@ def main():
         lr_new_codis_ref_df.to_excel(config["lr_new_codis_ref_df_grand_path"], index=True)
         lr_old_codis_rus_df.to_excel(config["lr_old_codis_rus_df_grand_path"], index=True)
         lr_new_codis_rus_df.to_excel(config["lr_new_codis_rus_df_grand_path"], index=True)
-    print(round(time.time() - start, 2), 's')
-
 
 if __name__ == "__main__":
     main()
