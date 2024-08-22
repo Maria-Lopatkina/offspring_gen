@@ -12,7 +12,6 @@ population data, we seek to improve the accuracy of genetic examinations and sup
 identification processes for individuals in these regions.
 
 ## Aim and tasks
-Aim and Tasks
 
 The **goal** of this project is to develop and implement software tools for generating genetic data and 
 calculating key metrics to demonstrate the limitations of current STR marker sets and frequencies. We aimed 
