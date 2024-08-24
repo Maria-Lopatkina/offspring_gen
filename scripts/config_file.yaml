@@ -4,7 +4,7 @@
 main_table_path: "~/projects/PyCharm/GIL/offspring_gen/input_files/ASTR22_main_input.xlsx"
 
 # Enter the absolute path to the output file with generated parents data
-output_file_gen_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/parents_gen.xlsx"
+output_file_gen_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/parents_gen.xlsx"
 
 # Enter the number of generated individuals:
 number_of_gen_individuals: 1000
@@ -19,7 +19,7 @@ mut_rate: 0.0045
 ############################ Files and variables for PP, PI, and LR calculations ############################
 
 # Enter the absolute path to the final output file
-final_output_file_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/fin_output.xlsx"
+final_output_file_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/fin_output.xlsx"
 
 # Enter the number of pairs
 number_of_pairs: 5
@@ -34,13 +34,13 @@ populations_all: ["якуты"]
 #################################### Files and variables for siblings calculations ####################################
 
 # Enter the absolute path to the output file with generated families data
-output_file_sibl_family_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_families.xlsx"
+output_file_sibl_family_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/SIBL_generated_families.xlsx"
 
 # Enter the absolute path to the final output files with LR calculations
-lr_old_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_old_codis_ref_df.xlsx"
-lr_new_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_new_codis_ref_df.xlsx"
-lr_old_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_old_codis_rus_df.xlsx"
-lr_new_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/SIBL_generated_lr_new_codis_rus_df.xlsx"
+lr_old_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/SIBL_generated_lr_old_codis_ref_df.xlsx"
+lr_new_codis_ref_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/SIBL_generated_lr_new_codis_ref_df.xlsx"
+lr_old_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/SIBL_generated_lr_old_codis_rus_df.xlsx"
+lr_new_codis_rus_df_sibl_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/SIBL_generated_lr_new_codis_rus_df.xlsx"
 
 # Enter the number of pairs:
 number_of_pairs_sibl: 5
@@ -55,13 +55,13 @@ populations_sibl: ["якуты"]
 ################################## Files and variables for grandparents calculations ##################################
 
 # Enter the absolute path to the final output file
-output_file_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_families.xlsx"
+output_file_grand_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/GRAND_generated_families.xlsx"
 
 # Enter the absolute path to the final output files with LR calculations
-lr_old_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_old_codis_ref_df.xlsx"
-lr_new_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_new_codis_ref_df.xlsx"
-lr_old_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_old_codis_rus_df.xlsx"
-lr_new_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/scripts/parents_data_generation/GRAND_generated_lr_new_codis_rus_df.xlsx"
+lr_old_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/parents_data_generation/GRAND_generated_lr_old_codis_ref_df.xlsx"
+lr_new_codis_ref_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/GRAND_generated_lr_new_codis_ref_df.xlsx"
+lr_old_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/GRAND_generated_lr_old_codis_rus_df.xlsx"
+lr_new_codis_rus_df_grand_path: "~/projects/PyCharm/GIL/offspring_gen/output_files/GRAND_generated_lr_new_codis_rus_df.xlsx"
 
 # Enter the number of pairs of grandparents
 number_of_pairs_grands: 100
@@ -75,11 +75,6 @@ grandchildren: 1
 # Enter the list of population names
 # ex. ["якуты"] or ["якуты", "тувинцы"]
 populations_grand: ["якуты"]
-
-################################## Files and variables for X-STR calculations ##################################
-
-
-
 
 ############################################### Lists and Dictionaries ###############################################
 
